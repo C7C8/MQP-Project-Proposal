@@ -1,5 +1,6 @@
 \documentclass[12pt]{article}
 \usepackage{proposal}
+\usepackage{listofauthorships}
 
 \title{\scshape MQP Project Proposal}
 \author{Samuel Goldman, Evan Goldstein, Christopher Myers, David Vollum}
@@ -181,9 +182,13 @@ Using an application on either a mobile device (e.g. smart phone or laptop equip
     \item RTT - Round Trip Time
 \end{itemize}
 
-% Bibliography, automagically managed in ACM style
+% Bibliography, automagically managed in IEEE style.
 \newpage
 \singlespacing
+
+\section{References} % Replace the section created by the bibliography with a manually created one
+\renewcommand{\section}[2]{}%
+
 \bibliographystyle{ieeetr}
 \bibliography{references}
 \end{document}

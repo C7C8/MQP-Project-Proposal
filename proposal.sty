@@ -17,17 +17,16 @@
 \RequirePackage{fancyhdr}                                       % Header
 \RequirePackage[fit]{truncate}                                  % Truncate section names
 \RequirePackage{charter}                                        % Charter font
-\RequirePackage[nottoc,numbib]{tocbibind}                       % Add references to table of contents
-\RequirePackage{glossaries}
+\RequirePackage{glossaries}                                     % Glossary, acronyms list, etc
 
 % Document-wide options
 \hypersetup{colorlinks=true,                                % Blue links, everything else black
             urlcolor=blue,
             citecolor=black,
             linkcolor=black}
-\titlespacing*{\section}{0pt}{0pt}{0pt}                   % Reduce section headrer spacing
-\titlespacing*{\subsection}{0pt}{3pt}{0pt}                % Reduce subsection header spacing
-\titlespacing*{\subsubsection}{0pt}{3pt}{-1.5pt}          % Reduce subsubsection header spacing
+% \titlespacing*{\section}{0pt}{0pt}{0pt}                   % Reduce section headrer spacing
+% \titlespacing*{\subsection}{0pt}{3pt}{0pt}                % Reduce subsection header spacing
+% \titlespacing*{\subsubsection}{0pt}{3pt}{-1.5pt}          % Reduce subsubsection header spacing
 \renewcommand\familydefault{\sfdefault}                     % Sans serif
 \newcommand{\textapprox}{\raisebox{0.1ex}{\texttildelow}}   % Add a ~ character for approximate values
 \newcommand{\repeatcaption}[2]{                             % \repeatcaption command for reusing figures
