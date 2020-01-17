@@ -17,14 +17,17 @@
 \RequirePackage{fancyhdr}                                       % Header
 \RequirePackage[fit]{truncate}                                  % Truncate section names
 \RequirePackage{charter}                                        % Charter font
-\RequirePackage[acronym]{glossaries}                                     % Glossary, acronyms list, etc
+\RequirePackage[acronym]{glossaries}                            % Glossary, acronyms list, etc
+\RequirePackage{glossary-mcols}                                 % Multi-column glossary or acronyms list
+\RequirePackage{xparse}                                         % Better parsing for macros
+\RequirePackage{siunitx}
 
 % Document-wide options
 \hypersetup{colorlinks=true,                                % Blue hyperlinks, everything else black
             urlcolor=blue,
             citecolor=black,
             linkcolor=black}
-% \titlespacing*{\section}{0pt}{0pt}{0pt}                   % Reduce section headrer spacing
+% \titlespacing*{\section}{0pt}{0pt}{0pt}                   % Reduce section header spacing
 % \titlespacing*{\subsection}{0pt}{3pt}{0pt}                % Reduce subsection header spacing
 % \titlespacing*{\subsubsection}{0pt}{3pt}{-1.5pt}          % Reduce subsubsection header spacing
 \renewcommand\familydefault{\sfdefault}                     % Sans serif
@@ -45,3 +48,32 @@
 \renewcommand{\headrulewidth}{1.5pt}
 \renewcommand{\footrulewidth}{0.5pt}
 \setlength{\headheight}{15.5pt}
+
+% Macro for acronyms with description
+\let\newacronymsaved\newacronym
+% \def\?#1{}
+\RenewDocumentCommand\newacronym{mmmg}{
+    % Fuck all ye who enter here
+    \expandafter\newcommand\expandafter{\csname #1\endcsname}[0]{\gls{#1}\,}
+    \expandafter\newcommand\expandafter{\csname #1s\endcsname}[0]{\glspl{#1}\,}
+    \expandafter\newcommand\expandafter{\csname #2\endcsname}[0]{\Gls{#1}\,}
+    \expandafter\newcommand\expandafter{\csname #2s\endcsname}[0]{\Glspl{#1}\,}
+    \IfNoValueTF{#4}{
+        \newacronymsaved{#1}{#2}{#3}
+    } {
+        \newglossaryentry{#1}{
+                            type=\acronymtype, 
+                            name={#2}, 
+                            description={#3}, 
+                            first={#3 (#2)\glsadd{#1-gls}}, 
+                            plural={⟨#2⟩\glspluralsuffix},
+                            firstplural={⟨#3⟩\glspluralsuffix\space (⟨#2⟩\glspluralsuffix)},
+                            see=[Glossary:]{#1-gls}}
+        \newglossaryentry{#1-gls}{name={#2}, description={#4. \textit{See pgs}}}
+    }
+}
+
+% Some new units
+\DeclareSIUnit{\dollar}{\$}
+\DeclareSIUnit{\bit}{b}
+\DeclareSIUnit{\byte}{B}

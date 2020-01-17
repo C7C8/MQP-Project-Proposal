@@ -1,0 +1,146 @@
+\section{Definitions of connectivity}
+
+To measure internet connectivity, it's important to concretely define \textit{what} internet connectivity is. To that end we've put together a list of possible metrics for defining internet connectivity.
+
+\subsection{RTT to all other locations}[Chris M.]
+\label{sec:raw-rtt-everything}
+
+\RTT is a measure of how long it takes for a packet to reach a server plus the time it takes for the server's response to make it back to the original source. It has a major effect on the apparent latency of a connection or the quality of a streaming application such as video streaming, video calls, \voip calls, and multiplayer gaming. Lower \rtts indicate a better connection and a more responsive internet experience.
+
+By measuring a location's average \rtt to any other location, we can roughly determine that connection's average quality. For example, we might find that a particular source has an average \rtt of 50 ms while another has an average 150 ms, so we would say the second has a worse connection than the first.
+
+\subsubsection{Normalized by distance}
+
+Average \rtt per location may be informative but without normalization by distance it doesn't tell us much about the infrastructure in the region of the measurement. That quality is a better indicator of internet connectivity than raw \rtts are because \rtts will be heavily affected by connections to far away geographic regions. For instance, a ping to a Chinese website will show an \rtt on the order of hundreds of milliseconds. Considering how far away China is and the amount of infrastructure between here and there, that's only to be expected. Averages at a location in the US would be heavily swayed by those large values, meaning raw \rtt would misrepresent the data.
+
+To correct for this we can divide the average \rtt by the distance between source and destination to obtain a measurement of milliseconds per kilometer. Naturally this number will be very small, but it will be a good indicator of infrastructure in a region.
+
+\subsection{RTT to regional locations}[Chris M.]
+
+It may be useful to group \rtt values by region, likely either by distance or national borders, based on the principle that an internet user will more likely connect to a server in the same country than to one in another country. In other words: Americans will likely visit American sites more than sites from other countries, so internet connectivity can be defined in terms of the sites a user would probably connect to. This measure of raw \rtt shares the same properties as raw \rtt from \S{}\ref{sec:raw-rtt-everything}, except with fewer high-\rtt destinations influencing averages.
+
+\subsubsection{Normalized by distance}
+
+Just like raw global \rtts, regional \rtts\ can be normalized by distance. Average regional \rtt normalized by distance is a good measure of a region's connectivity within itself, which may or may not be a better indicator of typical internet connectivity for residents of that region.
+
+\subsection{Aggregate RTT to /24 prefixes}[Samuel G.]
+
+This metric would aggregate data for each /24 prefix into one data point, essentially merging 256 \ip addresses into a single node. This analysis would demonstrate average connectivity between /24 networks, similar in a way to analyzing connectivity between counties or zip codes. In doing so, it would characterize the overall connectivity of that network. Additionally, we should be able to link /24 networks to geographic areas and show which areas have the best and worst /24 prefixes.
+
+\subsection{RTT to top websites}[Samuel G.]
+Five websites (Google, Facebook, Youtube, Yahoo, and Amazon) dominate internet traffic in the United States with over 30\% of the traffic share (https://moz.com/blog/most-popular-us-industries-traffic-shares). 67\% of US internet users visit Google to search the internet and 68\% use Facebook for social media. These websites, along with the other top websites in the country, play a major role in internet connectivity and usability for a large portion of internet users in the United States. Therefore, measuring connectivity to these websites provides a window into the user experience of the internet for a geographic location.
+
+Beyond the direct usage of top websites, major websites adopting \cdns contributes to internet consolidation. According to the Internet Society, 87.5\% of the top 1000 websites in 2018 used \cdns to speed up the delivery of their content. Of these 1000 sites, Amazon Cloudfront and Akamai provide \cdn services to 474 websites. The Internet Society states that four services (Dyn, Akamai, \AWS, and Cloudflare) serve an estimated 50\% of the top 1000 .com, .net, and .org domains \cite{TheInternetSociety2019}.
+
+The reality of a more centralized internet is that as the web grows ever more consolidated around these cloud services, the ability to speedily connect to any IP becomes less of an issue for everyday users. From this vantage point, a better internet connection is one that provides faster load times to the top content providers, regardless of their location. This metric is very similar to the \rtt measurements described earlier, but is more focused on the end user's use case.
+
+\subsubsection{Normalized by distance}
+
+While users might only care about the end result and how it impacts their ability to browse the web, normalizing the data by distance to the website data center could provide valuable information regarding regional infrastructure. A region showing high latency to top websites and a high ms/km rating might have room to improve, while a high latency region with low ms/km might not be able to improve. Network architects and companies looking to expand could use this data to prioritize locations and perhaps everyday users could use it to determine if their area has the potential to improve.
+
+\subsection{Aggregate regional RTT to other regions}[Samuel G.]
+
+This analysis would look at the average connectivity, such as \RTT, measurements in a political region to all other regions. These regions could be U.S. counties, zip codes, census blocks, or something else. Such aggregation doesn't necessarily follow the nature of network architecture, but this aggregation would highlight certain potential inequalities on political boundaries. Whatever these inequalities might be, focusing on these regions in this way would be useful to local authorities and constituents looking to improve internet access in their areas.
+
+\subsection{Advertised speeds per region}[David V.]
+One of the things that can often dictate peoples "Internet Connectivity" are the available "advertised" broadband connection speeds in a given region. It would provide an idea of both the infrastructure available area and what the ISP can successfully market. Advertised connection speed per region provide a strong metric into what average consumers can access across the US. Comparing the available advertised speeds between regions can show relative infrastructure differences.
+
+\subsubsection{Maximum}
+The maximum available connection speed across an area gives an idea of what connections are possible in a given regional area. This metric can be used if money is not considered and all that is desired is the maximum possible connection speed without any throttling by the \isp.
+\subsubsection{Minimum}
+The minimum connection speed available provides a strong summery of what would be considered to be the most accessible to every American.
+\subsubsection{Average}
+The average advertised connection speed offered by Broadband subscribers in the US provides a general metric for available speed across the US. The metric would be the average of all of the connections offered for the given region. 
+
+\subsection{Cost per megabit per second}[Evan G.]
+Internet infrastructure quality varies widely by location. Generally, urban areas have faster, more reliable and more stable infrastructure, and rural areas have slower, less reliable infrastructure. A good metric of the quality of the infrastructure is the cost per \mbps. The same speed connection will be (often significantly) more expensive in an area with a lower quality infrastructure (rural) than in an area with a higher quality infrastructure (urban). Comparing the cost per \mbps between different areas reveals the relative infrastructure quality between two different areas. This could also be considered a measure of user experience in the sense that a user must pay more for a better connection, resulting in a detriment to the overall internet usage experience.
+
+% \subsubsection{Normalized by regional affluence}
+
+\subsubsection{Average}
+The Average cost per \mbps in an area can be used as a general metric for the internet connection quality in that area. An average should be taken across connections with "comparable" speeds and prices. For example, an average could include connections between 100 and 1000 \mbps and costs between \$50 and \$200/mo, and leave out outliers such as very expensive or inexpensive connections (relative to the area), or connections much faster or slower than most other connections (e.g. a 2 \mbps DSL connection in an area where fiber is available). Multiple averages could be taken for a given area. For example, average cost of connections between 10 and 100 Mbps and betwen 100 and 1000. This would allow comparison of "fast" and "slow" connection speeds in two different areas.
+
+% \subsubsection{Maximum}
+% The maximum cost per \mbps in an area shows 
+
+\subsection{RTT to backbone}[Chris M.]
+
+For all non-local traffic (likely the majority, since major data centers are relatively uncommon compared to residential locations) data will inevitably pass through the \gls{backbone}, which will forward it on to its final destination. Backbone \rtt is then a measurement of how long it takes for a user to reach the nearest backbone entry point and vice versa, which should be a good indicator of internet connectivity and latency.
+
+\subsubsection{Normalized by distance}
+
+Normalizing \rtt to \gls{backbone} by distance is as useful as in other \rtt methods, since it gives a better picture of infrastructure quality between the user and the backbone. The effect of normalization will likely be diminished, however, since \rtt to backbone is technically a form of regional grouping.
+
+\subsection{Data cap by region}[Evan G.]
+A data cap on broadband connections could reveal limited bandwidth in an area, and an attempt by the ISP to limit how much traffic consumers are generating. This is not a direct comparison, but possibly a correlation.
+
+\subsection{IPv6 connectivity/availability}[Samuel G.]
+
+Officially established as an internet standard in 2017, IPv6 expands \ip addresses to 128 bits in order to address the exhaustion of 32 bit IPv4 \ips. However, deployment of network hardware that supports IPv6 has been slow. According to Google, as of September 2019, the United States has only reached 36.4\% adoption of the new protocol \cite{Google2019a}. While this is not an immediate problem, analyzing where IPv6 has not been implemented in the United States might show which regions are being prioritized. Overall, this definition of connectivity is a form of future internet connectivity.
+
+\subsection{Risk of Disconnection/Stability of Connection}[Samuel G.]
+Another way of looking at future connectivity involves determining how at risk a region is of becoming disconnected from the internet. A community or region may have sufficient connection now, but if that connection is reliant on a single point of failure (or any degree of failure lower than the rest of the population) in the network, its future connectivity is at risk. Another form of this, although less technical, would involve whether a government entity is capable and willing to sever or curtail internet availability.
+
+\subsection{Content provider downtime by region}[Samuel G.]
+
+Knowing how often content providers have downtime in different regions (likely at a state or larger scale) would show how reliable that region's connection to that content is. Differences between regions could be attributed to overall network reliability or any other of a number of issues. This again falls into the category of user experience and might be something that everyday users would be interested in learning about.
+
+\subsection{Table of definitions}[Chris M.]
+
+% I'll work some magic LaTeX table bullshit to put a pretty looking table here that sums
+% up all of the connectivity definitions, the units, and usefulness by use case. It won't
+% look good in code (*no* markup language has good tables...) but it'll look good in the
+% report.
+
+\begin{table}[H]
+    \centering
+    \normalsize
+    \singlespacing
+    \begin{tabular}{m{0.5\textwidth}|c|m{0.3\textwidth}}
+        \textbf{Type} & \textbf{Unit} & \textbf{Measures} \\
+        \hline
+        
+        Global \rtt & \si{ms} & Latency, responsiveness \\
+        
+        Global \rtt, normalized & \si{ms/km} & Infrastructure quality \\
+        
+        Regional \rtt & \si{ms} & Latency, responsiveness (regional) \\
+        
+        Regional \rtt, normalized & \si{ms/km} & Regional infrastructure quality \\
+        
+        Aggregate \rtt to /24 prefixes & \si{ms} & Latency, responsiveness \\
+        
+        \RTT to top websites & \si{ms} & Latency \& responsiveness \\
+        
+        \RTT to top websites, normalized & \si{ms/km} & Infrastructure quality \\
+        
+        Aggregate regional \RTT to larger region & \si{ms} & Latency \& responsiveness \\
+        
+        Max available connection speed & \si{Mb/s} & Best available speed \\
+        
+        Minimum available connection speed & \si{Mb/s} & Worst available speed \\
+        
+        Average available connection speed & \si{Mb/s} & Average available speed \\
+        
+        % This is where units start getting a little hairy. Just... trust me on these?
+        Cost by speed & \si{\dollar\second\per\mega\bit} & Connection speed cost \\
+        
+        Cost by speed (normalized by affluence) & \si{\second\squared\per\mega\bit} & Connection speed by income \\
+        
+        Average cost by speed & \si{\dollar\second\per\mega\bit} & Connection speed cost \\
+        
+        Maximum cost by speed & \si{\dollar\second\per\mega\bit} & Connection speed max cost \\
+        
+        \RTT to backbone & \si{ms} & Latency, responsiveness \\
+        
+        Data cap by region & \si{\mega\byte\per\second} & Data cap \\
+        
+        IPv6 connectivity/availability & \% & Future connectivity \\
+        
+        Risk of disconnection & \% & Future connectivity \\
+        
+        Content provider downtime & \% & Future connectivity
+    \end{tabular}
+    \caption{List of connectivity definitions in SI units}
+    \label{tab:connectivity-definitions}
+\end{table}

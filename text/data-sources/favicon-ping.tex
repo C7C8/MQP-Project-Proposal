@@ -1,0 +1,28 @@
+\subsection{Favicon ping}[Samuel G.]
+This method involves distributed users loading a web page that itself continually loads \glspl{favicon} from a set of predetermined, popular websites. favicons are small identifying images that most major websites provide for browsers to place on tabs. By loading these images with a random parameter to circumvent caching, the page can estimate the round trip time required to receive the favicon, analogous to a ping time. The site then reports this ping, along with the client \ip address, to a server.
+
+Websites would likely be selected using a list of the most popular sites in the world and/or the United States, such as \href{www.alexa.com/topsites}{Alexa} or \href{www.similarweb.com/top-websites}{SimilarWeb}. Using such lists would focus this investigation on the websites that most impact usability of an internet connection for most people.
+
+\paragraph{Potential issues}
+Attempting to measure timing data from a browser will introduce jitter and uncertainty into the data, and estimated \rtts will not be representative of a true ping with \icmp packets. Additionally, the analysis might have to account for different browsers impacting load time, although we have not yet explored this.
+
+\subsubsection{Multiple IP RTT}
+When a user loads the data collection page, a script in the background will continually request favicons from a list of the top websites in the United States and measure the total time to get the image. This method only attempts to circumvent favicon caching (by including a randomized parameter) - it ignores the possibility of \cdns or any other methods of optimizing delivery speeds. We chose to include cache prevention because normal users don't repeatedly load favicons, however in order to collect enough data to eliminate jitter the favicon must be loaded multiple times for each user. By not accounting for \cdns, this method enables a limited form of normalization by distance: if a website uses a strong \cdn, it accounts for distance in load times, to a certain degree.
+
+\paragraph{How the data is useful}
+This data can show approximately how fast users can static resources from the top websites in the country. We can create maps showing connectivity for each targeted website, which would highlight differences for different websites. For example, users in San Francisco may have higher \rtts for wpi.edu than users in Boston. Additionally, averaging (perhaps with a weight based on popularity) the data for all websites together could show overall connectivity to the websites based on region. Conversely, for each website, this data can show which regions may need either stronger \cdn support or better network connectivity.
+
+\subsubsection{Single IP RTT}
+When a website uses a \cdn a client loading the web page on the east coast may end up loading Amazon.com's favicon from a different server than a user on the west coast. To circumvent this, the data collection site would load the favicons from a specific \ip address, bypassing \dns resolution.
+
+\paragraph{How the data is useful}
+Most people do not load websites from \ip addresses, so this method would not be representative of the experience for everyday users. However, this method has the potential to show the disparity in \cdns for different sites.
+
+\subsubsection{Single IP RTT per distance}
+When using the favicon ping method with a single target \ip, post analysis can estimate the approximate distance between the client and the server that sent the favicon. By dividing the average ping between that client and the server, we can normalize the data for distance.
+
+\paragraph{How the data is useful}
+While distance is a major factor in load times and overall user experience, normalizing for distance will highlight areas that have a better connection relative to their distance from content providers. However, this would not be representative of usability: users far from content data centers or \cdns would still suffer from slow load times even if they have a top tier connection. This analysis could show where efforts could be made to improve connections.
+
+\subsubsection{Multiple IP RTT per rated connection speed}
+Measured \rtt times to domain names (potentially multi-homed) could be normalized to expected connection speeds (see section below) using the size of the loaded favicon ((favicon size / (average rtt / 2) / expected connection speed). Using this data, locations could be assigned a "getting-what-you-paid-for" index. A higher value would indicate a better connection relative to the expected connection; a lower value would indicate connections worse than expected.
