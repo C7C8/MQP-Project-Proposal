@@ -1,0 +1,38 @@
+\section{Traceroutes}\label{sec:background_traceroutes}
+
+A \gls{traceroute} is a method for determining which servers are along a data packet's route and determining the \rtt to each of them. Most traceroutes
+work using \icmp but in theory anything that uses \ip works.
+
+Traceroutes hinge on the \ttl field of \ip packets, a 8-bit field that is decremented by one every time the packet is processed \cite{rfc791}. Typically this is set reasonably high so packets can take many hops to reach their destination, but low enough that if undeliverable they will eventually be discarded. Upon discard, most servers respond with an \icmp packet to the original host indicating \ttl expiry. This message is received by the machine running the traceroute, which uses the sender's \ip and knowledge of the \ttl of the packet it sent out to place the server somewhere along the route.
+
+The mechanics of a traceroute program are then a very simple procedure. With $i=1$ an \icmp-based traceroute program follows the below:
+
+\begin{enumerate}
+    \item Send an \icmp ping with \TTL$=i$ to the destination server.
+    \item If an \icmp \ttl-expired packet is received, mark the sender as hop $i$ along the route. If a timeout is reached, skip.
+    \item If an \icmp ping response is received (i.e. the destination was reached), mark the destination server as the $i$-th hop and note the time it took to recieve the packet.
+    \item Increment $i$ by one and repeat.
+\end{enumerate}
+
+This process produces a list of servers and their associated \rtts. A sample output from the aptly-named Linux \texttt{traceroute} utility is shown in figure \ref{fig:sample_traceroute}. The \texttt{* * *} instances on lines 2 and 10 indicate that no response was received from these hops, so \texttt{traceroute} proceeded without them.
+
+\begin{figure}
+    \centering
+    \begin{minted}{text}
+                 1  192.168.1.1  16.529 ms
+                 2  * * *
+                 3  96.34.83.9  26.158 ms
+                 4  96.34.84.212  30.452 ms
+                 5  96.34.2.142  31.084 ms
+                 6  96.34.0.51  31.012 ms
+                 7  96.34.0.137  27.184 ms
+                 8  96.34.3.89  23.049 ms
+                 9  96.34.148.35  28.703 ms
+                10  * * *
+                11  108.170.246.33  26.405 ms
+                12  108.170.246.34  24.091 ms
+                13  172.217.164.142 24.720 ms
+    \end{minted}
+    \caption{Truncated traceroute output from \texttt{traceroute google.com}}
+    \label{fig:sample_traceroute}
+\end{figure}

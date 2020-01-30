@@ -1,0 +1,23 @@
+\section{CAIDA \& Atlas Measurements}\label{sec:design_caida}\todo{Proofread and trim down phrasing}
+
+As discussed in \autoref{sec:background_connectivity}, one way to measure internet connectivity is by an everything-to-everything approach where the \rtt between as many devices in a region as possible is measured. Collection of such data requires either moving one device to many places or having an enormous network of devices distributed across the globe; in either case the device(s) would ping as many different devices as they can find.
+
+Fortunately such projects exist --- two organizations, \caida and \ripe maintain projects that do almost exactly that. \caida and \ripe (the latter through its Atlas project) have networks of thousands of small network-connected devices, typically Raspberry Pis or similar, that scan vast swathes of the internet, constantly running \gls{traceroute}s (see \autoref{sec:background_traceroutes}). For example, \caida's project involves a technique they call "prefix probing" whereby the \caida data collection network tries to run a \gls{traceroute} to at least one device in every /24 prefix. Together these networks have generated terabytes of data over many years, all of which is publicly available.\footnote{\CAIDA's prefix probing data can be found at \url{https://www.caida.org/data/active/ipv4_prefix_probing_dataset.xml}. The \ripe Atlas dataset may be found at \url{https://data-store.ripe.net/datasets/atlas-daily-dumps}}
+
+\subsection{Direct Ping Calculation}
+
+Since a \gls{traceroute} is really just a series of pings, and traceroute output reports the \rtts for all of them, \caida and \ripe Atlas traceroute data can be used for the everything-to-everything \rtt approach. The methodology is simple: for every hop in each traceroute, record the source, the destination, and the \rtt. IP geolocation can be used to determine source and destination coordinates, and the Haversine formula can be used to find a distance between them (formula \ref{form:haversine_distance}). This technique is referred to as \textit{direct ping calculation}.
+
+\begin{formula}
+    \begin{equation}
+        d = 2r\arcsin{\sqrt{\sin^2{\left(\frac{\rho_2-\rho_1}{2}\right)} + \cos{\rho_1}\cos{\rho_2}\sin^2{\left(\frac{\lambda_2-\lambda_1}{2}\right)}}}
+    \end{equation}
+    \caption{Haversine formula for distance; $\rho_1,\rho_2$ and $\lambda_1,\lambda_2$ are latitude/longitude respectively for the two points in radians, and $r$ is the radius of the Earth at 6,371 km.}
+    \label{form:haversine_distance}
+\end{formula}
+
+\subsection{Indirect Ping Calculation}
+
+Of note is that a crude calculation of the \rtt between each individual server can also be performed without directly sending pings out from it. By taking one server's \rtt and subtracting the \rtt from the server one hop behind it, we can loosely estimate how long it takes the two to communicate. For example, hop 4 in figure \ref{fig:sample_traceroute} has an \rtt of 30.452 ms while hop 3 has an \rtt of 26.158 ms. We can then estimate an \rtt of 8.588 ms between hops 3 and 4.\footnote{This is equal to \textit{twice} the value of the difference, since a simple subtraction would yield one-way communication, whereas we want \rtts.} The same technique applies to any two arbitrary pairs of hops in the traceroute log, although a sanity check to guard against negative \rtts (likely due to jitter along the connection) is needed.
+
+This technique results in roughly double the amount of data per traceroute, since if you have a traceroute $A\rightarrow B\rightarrow C\rightarrow D$, you have data for not only $A\rightarrow B, A\rightarrow C,$ and $A\rightarrow D$, you can calculate $B\rightarrow C, B\rightarrow D$, and $C\rightarrow D$. For a traceroute of $n$ hops, you can extract $2n-2$ \rtts. This technique is referred to as \textit{indirect ping calculation}.

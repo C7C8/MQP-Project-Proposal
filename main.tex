@@ -1,12 +1,15 @@
-\documentclass[12pt]{article}
-\usepackage{styles/proposal}
+\documentclass[12pt,oneside,letterpaper,article]{memoir}
+\input{styles/proposal.tex} % Don't question it
 \usepackage{styles/listofauthorships}
 \usepackage{multicol}
-% \usepackage[utf8]{inputenc}
 \usepackage[style=ieee,citestyle=numeric-comp,sorting=anyt]{biblatex}
+\usepackage{wrapfig}
+\usepackage{placeins}
+\usepackage{microtype}
+\usepackage{float}
 \graphicspath{{images/}}
 
-\title{\scshape MQP Project Proposal}
+\title{\scshape Mapping Internet Connectivity in the United States}
 \author{Samuel Goldman, Evan Goldstein, Christopher Myers, David Vollum}
 % \date{September 2019}
 
@@ -28,17 +31,21 @@
     \maketitle
     \newpage
     
+    % Abstract
+    \input{text/abstract.tex}
+    \newpage
+    
     % Table of contents, list of figures
     \pagenumbering{roman}
     \tableofcontents\newpage
     % \listofauthorships
     \listoffigures
+    \listoftables
     \newpage
     
     % Switch to arabic page numbering, start headers, and one half spacing.
     \pagenumbering{arabic}
-    \pagestyle{fancy}
-    \onehalfspacing
+    \pagestyle{headings}
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%
     %%% MAIN PAPER CONTENTS %%%
@@ -48,43 +55,78 @@
     % Add a .tex file under the text folder, put your stuff there, then \input it in the
     % spot where it should go. THIS MEANS YOU DON'T HAVE TO DEAL WITH ONE GIANT MANUSCRIPT!
     
-    \input{text/intro.tex}\newpage
+    \chapter{Introduction}\label{sec:introduction}
+    \input{text/introduction.tex}
     
-    \input{text/connectivity_definitions.tex}\newpage
+    \newpage
+    \chapter{Background}\label{sec:background}
+    \input{text/background/introduction.tex}
+    \input{text/background/connectivity.tex}
+    \input{text/background/architecture.tex}
+    \input{text/background/traceroutes.tex}
+    \input{text/background/caching.tex}
+    \input{text/background/dns.tex}
+    \input{text/background/cdns.tex}
+    \input{text/background/geolocation.tex}
+    \input{text/background/prior_work.tex}
     
-    \input{text/prior_work.tex}\newpage
+    \newpage
+    \chapter{Design}\label{sec:design}
+    \input{text/design/introduction.tex}
+    \input{text/design/web_ping.tex}
+    \input{text/design/dns.tex}
+    \input{text/design/caida_atlas.tex}
+    \input{text/design/not_pursued.tex}
+    \input{text/design/putting_it_together.tex}
     
-    \section{Data Sources and Analysis Methods}
-    \input{text/data-sources/favicon-ping.tex}
-    \input{text/data-sources/caida-ripe-traceroutes.tex}
-    \input{text/data-sources/isp-mapping.tex}
-    \input{text/data-sources/route-trip.tex}
+    \newpage
+    \chapter{Implementation}\label{sec:implementation}
+    \input{text/implementation/favicon_ping.tex}
+    \input{text/implementation/dns.tex}
+    \input{text/implementation/caida_atlas.tex}
     
+    \newpage
+    \chapter{Results}\label{sec:results}
+    \input{text/results/favicon_ping.tex}
+    \input{text/results/dns.tex}
+    \input{text/results/caida_atlas.tex}
+    \input{text/results/final_results.tex}
     
-    %%%%%%%%%%%%%%%%%%
-    %%% END MATTER %%%
-    %%%%%%%%%%%%%%%%%%
+    \newpage
+    \chapter{Future work}
+    \input{text/future_work.tex}
+    
+    \chapter{Conclusion}
+    \input{text/conclusion.tex}
+    
+    % TODO Make sure appendix formatting works correctly
+    \begin{appendices}
+        \input{text/appendices/code.tex}
+    \end{appendices}
+
+    %%%%%%%%%%%%%%%%%%%
+    %%% BACK MATTER %%%
+    %%%%%%%%%%%%%%%%%%%
+    
+    \backmatter
     
     % It's simpler to disable automatic sectioning for the glossaries and references than it is to fix a bug
     % in table-of-authorship handling. I'm so, so sorry.
-    \singlespacing
-    \let\endsection\section
+    \let\endsection\chapter
     \renewcommand{\section}[2]{}%
     
     % List of acronyms
     % \footnotesize
     \newpage
-    \endsection{Acronyms}
     \setglossarystyle{mcolindex} % See https://www.dickimaw-books.com/gallery/glossaries-styles/ for styles
     \printglossary[type=\acronymtype]
+    \addcontentsline{toc}{chapter}{Acronyms}
     
-    \endsection{Glossary of terms}
     \setglossarystyle{index}
+    \addcontentsline{toc}{chapter}{Glossary}
     \printglossary
     
     % Bibliography, automagically managed in IEEE style.
     \newpage
-    \nocite{*}
-    \endsection{References}
     \printbibliography
 \end{document}
