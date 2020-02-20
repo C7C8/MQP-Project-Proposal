@@ -1,0 +1,23 @@
+\section{Implementation}\label{sec:caida_impl}
+
+We collected as much \caida and \ripe Atlas data as a teammember's hard drives could handle using the common tool \texttt{wget} (and later an http-accelerator program \texttt{axel}). \ripe Atlas data is stored in \json format while \caida developed its own binary format "WARTS" for more efficiently storing data. While the code for reading it is open source, a toolkit including a warts-to-\json converter is available for download\footnote{\url{http://www.caida.org/tools/measurement/scamper}} and once converted the resulting \json file is similar to the \ripe Atlas format. This enabled development of an all-in-one \etl program to process both file formats and combine their data into one large database. The total volume of data processed is estimated at 5-10 terabytes.
+
+\subsection{Data ETL Pipeline}
+
+The pipeline was implemented as a bash script that operated in three stages. This process is highly parallelizable and so the aptly-named \texttt{parallel} tool \cite{Tange2011} was used to process 8-16 files at a time.
+
+\paragraph{Extraction} \ripe Atlas distributes data in compressed (gzip) format, each of which contains a single 10 GB \json file. \caida distributes files in compressed WARTS format, which each expand to 3 GB \json files when extracted and converted. Since 10 GB files are unwieldy and the file format permitted it, \ripe Atlas files were split into chunks of 100,000 traceroutes each -- about 3,000 files total.
+
+\paragraph{Transformation} A program (dubbed the "traceroute hopper" program while in development) was developed in C++ to parse the \json files and perform direct+indirect ping calculations for each traceroute (see \cref{sec:design_caida}). C++ was chosen for its performance\footnote{Python was originally used but suspected to be slow; switching to C++ yielded a 100\% performance boost, saving several days of processing time.} and availability of \json parsing libraries. Internally the program scans line by line through traceroute \json files, performs necessary calculations to determine \rtts (and in the case of \caida data, occasional \dns resolution), and stores the results in a configurable internal buffer.
+
+\paragraph{Load} Once the traceroute hopper reaches its buffer's capacity, it dumps the contents out to a PostgreSQL database. PostgreSQL was chosen for its performance, advanced features, and in particular its ability to generate spatial indexes, valuable to the \gis oriented work this project involved. Performing basic statistical analyses and fast joins was also a sought-after feature.
+
+\bigskip
+
+Once all data was collected in the database it was possible to sort out unique \ips, each of which was fed into a geolocation library (see \cref{sec:background_geolocation}) provided by MaxMind to estimate the location of the machine the \ip address belonged to. This step was delayed until after the \etl process for performance reasons. After processing was completed, the database contained \textapprox71 billion individual \rtt measurements.
+
+\subsection{Data Cleaning \& Initial Processing}
+
+The data required some cleaning before it could be considered viable for serious analysis. For unknown reasons, some collected \rtts were \textit{extremely} large, on the order of hundreds of thousands of millisecond, so such measurements were filtered out. Some servers also showed a consistent tendency towards exceptionally high \rtts (several thousand milliseconds) in a manner that was inconsistent with others, so these too were filtered out (potentially discarding dozens of measurements at a time). Since threshold filters (ex. removal of all points above $x$ ms) risk biasing data, simple Z-score filtering was selected -- values with an absolute Z-score above 2.0 were discarded.
+
+After cleaning the data was grouped together by source-destination \ip pair. Many pairs had multiple measurements each, so for each the range, the average, standard deviation, measurement count, and range were calculated. This grouping processed also assigned coordinate pairs to each IP pair, enabling geographic processing. After grouping there were \textapprox230 million data points.

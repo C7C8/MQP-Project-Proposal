@@ -1,24 +1,23 @@
-\documentclass[12pt,oneside,letterpaper,article]{memoir}
-\input{styles/proposal.tex} % Don't question it
-\usepackage{styles/listofauthorships}
-\usepackage{multicol}
-\usepackage[style=ieee,citestyle=numeric-comp,sorting=anyt]{biblatex}
-\usepackage{wrapfig}
-\usepackage{placeins}
-\usepackage{microtype}
-\usepackage{float}
+\documentclass[12pt,oneside,letterpaper]{memoir}
+\usepackage[style=ieee,citestyle=numeric-comp,sorting=nty,backend=biber]{biblatex}
+\usepackage{todonotes}                                      % Temp
+\input{styles/report.tex} % Don't question it
+
 \graphicspath{{images/}}
 
-\title{\scshape Mapping Internet Connectivity in the United States}
+\title{\scshape Evaluating Internet Connectivity in the United States}
 \author{Samuel Goldman, Evan Goldstein, Christopher Myers, David Vollum}
 % \date{September 2019}
 
 % Glossary info goes in the preamble
-\input{glossary.tex}
+\input{text/glossary.tex}
 
 % Bibliography goes in the preamble
 \bibliography{references}
 
+% UNCOMMENT TO DISCOURAGE WILLS FROM PRINTING
+% \pagecolor[rgb]{0, 0, 0}
+% \color[rgb]{1,1,1}
 
 \begin{document}
     %%%%%%%%%%%%%%%%%%%%
@@ -27,6 +26,7 @@
     
     % Title page
     % TODO MAKE A FANCY TITLE PAGE
+    \frontmatter
     \pagenumbering{gobble}
     \maketitle
     \newpage
@@ -39,13 +39,13 @@
     \pagenumbering{roman}
     \tableofcontents\newpage
     % \listofauthorships
-    \listoffigures
-    \listoftables
-    \newpage
+    \listoffigures\newpage
+    \listoftables\newpage
     
     % Switch to arabic page numbering, start headers, and one half spacing.
     \pagenumbering{arabic}
     \pagestyle{headings}
+    \mainmatter
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%
     %%% MAIN PAPER CONTENTS %%%
@@ -58,11 +58,12 @@
     \chapter{Introduction}\label{sec:introduction}
     \input{text/introduction.tex}
     
+    \acresetall
     \newpage
     \chapter{Background}\label{sec:background}
     \input{text/background/introduction.tex}
-    \input{text/background/connectivity.tex}
     \input{text/background/architecture.tex}
+    \input{text/background/speed_test.tex}
     \input{text/background/traceroutes.tex}
     \input{text/background/caching.tex}
     \input{text/background/dns.tex}
@@ -71,37 +72,53 @@
     \input{text/background/prior_work.tex}
     
     \newpage
-    \chapter{Design}\label{sec:design}
-    \input{text/design/introduction.tex}
-    \input{text/design/web_ping.tex}
-    \input{text/design/dns.tex}
-    \input{text/design/caida_atlas.tex}
-    \input{text/design/not_pursued.tex}
-    \input{text/design/putting_it_together.tex}
+    \chapter{Definitions of Internet Connectivity}\label{sec:connectivity_defs}
+    \input{text/connectivity_definitions.tex}
     
     \newpage
-    \chapter{Implementation}\label{sec:implementation}
-    \input{text/implementation/favicon_ping.tex}
-    \input{text/implementation/dns.tex}
-    \input{text/implementation/caida_atlas.tex}
+    \chapter{Methods}\label{sec:methods}
+    \input{text/methods/overview.tex}
+    \input{text/methods/stats_rankings.tex}
+    \input{text/methods/not_pursued.tex}
     
     \newpage
-    \chapter{Results}\label{sec:results}
-    \input{text/results/favicon_ping.tex}
-    \input{text/results/dns.tex}
-    \input{text/results/caida_atlas.tex}
-    \input{text/results/final_results.tex}
+    \acresetall
+    \chapter{CAIDA \& RIPE Atlas}\label{sec:caida}
+    \input{text/caida/design.tex}
+    \input{text/caida/implementation.tex}
+    \input{text/caida/analysis.tex}
+    \input{text/caida/ranking.tex}
     
     \newpage
-    \chapter{Future work}
+    \chapter{Web Ping}\label{sec:web-ping}
+    \input{text/web-ping/design.tex}
+    \input{text/web-ping/implementation.tex}
+    \input{text/web-ping/results.tex}
+    
+    \newpage
+    \chapter{DNS Cache Manipulation}\label{sec:dns}
+    \input{text/dns/design.tex}
+    \input{text/dns/implementation.tex}
+    \input{text/dns/results.tex}
+    \input{text/dns/analysis.tex}
+    
+    \newpage
+    \chapter{Cumulative Analysis}\label{sec:results_cumulative}
+    \input{text/cumulative_analyses.tex}
+    
+    \newpage
+    \chapter{Future Work}\label{sec:future_work}
     \input{text/future_work.tex}
     
-    \chapter{Conclusion}
+    \newpage
+    \chapter{Conclusion}\label{sec:conclusion}
     \input{text/conclusion.tex}
     
     % TODO Make sure appendix formatting works correctly
+    \newpage
     \begin{appendices}
-        \input{text/appendices/code.tex}
+        \input{text/appendices/code.tex}\newpage
+        \input{text/appendices/db_queries.tex}
     \end{appendices}
 
     %%%%%%%%%%%%%%%%%%%
@@ -116,11 +133,15 @@
     \renewcommand{\section}[2]{}%
     
     % List of acronyms
-    % \footnotesize
+    \footnotesize
     \newpage
-    \setglossarystyle{mcolindex} % See https://www.dickimaw-books.com/gallery/glossaries-styles/ for styles
+    % See https://www.dickimaw-books.com/gallery/glossaries-styles/ for styles
+    % \setglossarystyle{mcolindex} 
+    \setlength{\glspagelistwidth}{0.4\textwidth}
+    \setglossarystyle{long3colheader}
     \printglossary[type=\acronymtype]
     \addcontentsline{toc}{chapter}{Acronyms}
+    \normalsize
     
     \setglossarystyle{index}
     \addcontentsline{toc}{chapter}{Glossary}

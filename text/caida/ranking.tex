@@ -1,0 +1,21 @@
+\section{State rankings}
+
+Using the statistical \& in/distinguishability graph methods described in \cref{sec:stats_methods}, we were able to develop both graph visualizations of state distinguishability and a possible ranking of the states.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.85\textwidth]{caida/caida_network_invalid_comps.png}
+    \repeatcaption{fig:caida_network_invalid_comps}{Indistinguishability graph of CAIDA+Atlas data as aggregated by state}
+\end{figure}
+
+\Cref{fig:caida_network_invalid_comps} shows an indistinguishability graph of comparisons between the states (previously seen in \cref{sec:stats_methods}), where node colors correspond to communities and bold red lines correspond to bridges.\footnote{You can think of bridges as indicators of comparison quality; any state on the end of a bridge can be compared to all but one of the other states.} As noted earlier, this graph has no disjoint subgraphs, so ranking by clusters is not possible. \Cref{fig:caida_network_valid_comps} shows the corresponding distinguishability graph, which is much more connected, indicating this data is a good candidate for the topological sort method.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.85\textwidth]{caida/caida_network_valid_comps.png}
+    \repeatcaption{fig:caida_network_valid_comps}{Distinguishability graph of CAIDA+Atlas data as aggregated by state}
+\end{figure}
+
+When sorted we obtain a list of 49 states (including the District of Columbia); two states were not reachable by a maximal topological sort. \ref{tab:caida_topological_state_rankings} shows this ranking, which roughly confirms what we'd expect based on prior notions and the heatmaps. States that are more populated or more urban are ranked higher than those are are less populated or more rural on average. The District of Columbia, being only a city and also the seat of the American federal government, naturally has the best internet. On the other hand, rural or more sparsely populated states like Montana or North Dakota rank at absolute last.
+
+\input{text/caida/tables/topological_state_ranks.tex}

@@ -1,0 +1,23 @@
+Internet access is an increasingly important part of the American economy and everyday life. Functions as simple as applying for a job, keeping in touch with friends, or continuing self-education all require internet connectivity. Major technology firms are often in the public spotlight, and common internet services can be found everywhere in public, ranging from music and video streaming, to online e-book stores, to digital storefronts. For a more quantitative evaluation, in 2018 an industry group comprised of major technology firms estimated that the "internet sector" of the economy alone represented \$2.1 trillion a year, or about 10\% of the \us economy \cite{Shepardson2019InternetGroup}.
+
+Unfortunately not all parts of the \us are as well connected as others, even by measures from simple personal anecdotes. For instance, it is  quite possible to find a town in rural Indiana where the best connection isn't good enough to stream a movie, while driving just 45 minutes east will yield a connection an order of magnitude better. Subjective measures and tales like this are common everywhere across the \us, but there is little scientifically-rigorous or complete data available. For instance, the \fcc has a map of estimated broadband deployment \cite{FederalCommunicationsCommission}, but simple broadband deployment isn't necessarily a good measure of how well connected people in those areas actually are.
+
+To address these problems, we set out to gather and analyze as much data as we could on how well connected Americans are to the internet, using various means and measures. Our hypothesis is simple: although there may be some regional variations or "spottiness," there is a relationship between your location in the \us and what sort of internet service you can expect. We hypothesized that areas near each other are likely to have similar connectivity to one another, and that these similarities will form large scale trends that should be visible on a map, both visible and interpretable by non-technical readers.
+
+The end goal of our project was to find if such relationships exist, and if so, to conduct analyses on the data to make the differences between areas of the \us clear. An important quality of our work is that it should be scientifically rigorous and statistically valid -- that is, we should avoid systemic error and account for random error in our calculations -- so a great deal of effort was expended on ensuring the validity of our results.
+
+The reminder of the report is organized into chapters as follows:
+
+In \cref{sec:background} we present background information on the fundamentals of the internet, information relevant to our methods, and research conducted on prior works and attempts at measuring connectivity.
+
+In \cref{sec:connectivity_defs} we rely upon collected background research to define some metrics for internet connectivity. These are not limited to traditional metrics used by consumers (such as speed), instead taking a more expansive approach.
+
+\Cref{sec:methods} describes a brief overview of our three main methods for collecting \& analyzing data on internet connectivity. We also present a brief overview of some of the statistical methods used, and an explanation of some methods that were considered but ultimately rejected.
+
+\Crefrange{sec:caida}{sec:dns} present detailed methods of the design, implementation, and analysis for each of our three methods for collecting data. Their analyses differ since each dataset is somewhat different, but the fundamentals (e.g. definitions of connectivity) remain largely the same.
+
+\Cref{sec:results_cumulative} contains our comparative analysis of the results of the three data analyses. We present overall conclusions drawn from the data, in both things we assert we are confident of and things we assert we are uncertain of.
+
+Finally, in \cref{sec:future_work} we suggest ideas for future projects to follow up on, drawing from shortcomings noted in our methods and the unpursued methods explained in \cref{sec:methods}.
+
+\todo{Should we include the conclusion in the roadmap?}
