@@ -1,4 +1,4 @@
-\section{Design}
+\section{Design}\label{sec:dns_design}
 The \dns cache manipulation method is largely derived from the method used in "The Internet Connected Project", the project preceding this one \cite{Fakult2019}. The method makes use of two sets of geographically diverse \dns servers: one list each of recursive and authoritative servers. The basic principle rests on the concept of making requests directly to each of the recursive servers that \textit{must} make their way to the authoritative ones and deducing the time between the two. As \dns includes no mechanism for reporting the time taken between two servers, \dns cache manipulation must rely on the \rtt from when the local request is dispatched to when an answer is received.
 
 \subsection{Collection Stages}\label{sec:dns_design_collection_stages}
@@ -18,7 +18,10 @@ Collecting data via \dns cache manipulation takes six stages of processing: thre
 Prior to running any tests, two lists of candidate recursive and authoritative servers are fed into tools that confirm their status as usable servers. For recursive servers, this process confirms that they are indeed public recursive servers. For authoritative candidates, it verifies that the server provides an answer for the domain it is expected to.
 
 \subsubsection{Testing Reliability}
-\todo{A diagram or two would definitely help. Also CoV def.}
+
+\missingfigure{Diagram, CoV definition}
+
+% \todo{A diagram or two would definitely help. Also CoV def.}
 Before actually using any of the servers for testing, we tested their reliability -- i.e. how consistent their response times were under constant parameters. After making repeated requests to each server, that in theory should have similar response times, we filter servers based on the \cv for the measured response times. This eliminated any servers with high variation from the testing. For recursive servers, priming the cache (see below) and then making repeated requests for the primed value served as the repeated requests. For authoritative servers, this was accomplished by making repeated requests for a random subdomain that the servers are authorities for through the \wpi recursive \dns server. This server is close enough to the machine we ran the tests on that the lag was minimal. The justification for running the filtering prior to testing is that each server included in the test increased the time required to run the entire test suite exponentially, as each recursive server was paired with each authoritative server.
 
 \subsubsection{IP Geolocation}

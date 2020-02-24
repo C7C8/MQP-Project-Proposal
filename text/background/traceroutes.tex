@@ -13,9 +13,9 @@ The mechanics of a traceroute program are then a very simple procedure. With $i=
     \item Increment $i$ by one and repeat.
 \end{enumerate}
 
-This process produces a list of servers and their associated \rtts. A sample output from the aptly-named \texttt{traceroute} utility\footnote{\texttt{traceroute} and its variations can be found on virtually every system made in recent memory. Linux distributions and Windows machines ship with command-line tools \texttt{traceroute} and \texttt{tracert} respectively, while MacOS has its own dedicated GUI application as a system tool.} is shown in figure \ref{fig:sample_traceroute}. The \texttt{* * *} instances on lines 2 and 10 indicate that no response was received from these hops, so \texttt{traceroute} proceeded without them.
+This process produces a list of servers and their associated \rtts. A sample output from the aptly-named \texttt{traceroute} utility\footnote{\texttt{traceroute} and its variations can be found on virtually every system made in recent memory. Linux distributions and Windows machines ship with command-line tools \texttt{traceroute} and \texttt{tracert} respectively, while MacOS has its own dedicated GUI application as a system tool.} is shown in \cref{fig:sample_traceroute}. The \texttt{* * *} instances on lines 2 and 10 indicate that no response was received from these hops, so \texttt{traceroute} proceeded without them.
 
-\begin{figure}
+\begin{code}
     \centering
     \begin{minted}{text}
  1  192.168.1.1  16.529 ms
@@ -34,4 +34,4 @@ This process produces a list of servers and their associated \rtts. A sample out
     \end{minted}
     \caption{Truncated output from \texttt{traceroute google.com}}
     \label{fig:sample_traceroute}
-\end{figure}
+\end{code}

@@ -1,23 +1,87 @@
 \section{Implementation}\label{sec:caida_impl}
 
-We collected as much \caida and \ripe Atlas data as a teammember's hard drives could handle using the common tool \texttt{wget} (and later an http-accelerator program \texttt{axel}). \ripe Atlas data is stored in \json format while \caida developed its own binary format "WARTS" for more efficiently storing data. While the code for reading it is open source, a toolkit including a warts-to-\json converter is available for download\footnote{\url{http://www.caida.org/tools/measurement/scamper}} and once converted the resulting \json file is similar to the \ripe Atlas format. This enabled development of an all-in-one \etl program to process both file formats and combine their data into one large database. The total volume of data processed is estimated at 5-10 terabytes.
+We collected as much \caida and \ripe Atlas data as a teammember's hard drives could handle using the common tool \texttt{wget} (and later an http-accelerator program \texttt{axel}). \ripe Atlas data is stored in \json format while \caida developed its own binary format "WARTS" for more efficiently storing data. While the code for reading it is open source, a toolkit including a warts-to-\json converter is available for download\footnote{\url{http://www.caida.org/tools/measurement/scamper}} and once converted the resulting \json file is similar to the \ripe Atlas format. The total volume of data processed is estimated at 5-10 terabytes.
 
 \subsection{Data ETL Pipeline}
 
-The pipeline was implemented as a bash script that operated in three stages. This process is highly parallelizable and so the aptly-named \texttt{parallel} tool \cite{Tange2011} was used to process 8-16 files at a time.
+The pipeline was implemented as a bash script that operated in three stages. This process is highly parallelizable and so the aptly-named \texttt{parallel} tool \cite{Tange2011} was used to process 8-16 files at a time. A \cli program was written in C++, dubbed the "traceroute hopper" while in development, was written to encompass the \etl pipeline detailed below, capable of parsing \json files and performing ping calculation. C++ was chosen for its performance\footnote{Python was originally used but known to be slow; switching to C++ yielded a 100\% performance boost, saving several days of processing time at cost of a few hours of development.} and availability of \json parsing libraries \cite{Tencent2016RapidJSON}.
 
-\paragraph{Extraction} \ripe Atlas distributes data in compressed (gzip) format, each of which contains a single 10 GB \json file. \caida distributes files in compressed WARTS format, which each expand to 3 GB \json files when extracted and converted. Since 10 GB files are unwieldy and the file format permitted it, \ripe Atlas files were split into chunks of 100,000 traceroutes each -- about 3,000 files total.
+\subsubsection{Extraction} \ripe Atlas distributes data in compressed (gzip) format, each of which contains a single 10 GB \json file. \caida distributes files in compressed WARTS format, which each expand to 3 GB \json files when extracted and converted. Since 10 GB files are unwieldy and the file format permitted it, \ripe Atlas files were split into chunks of 100,000 traceroutes each -- about 3,000 files total.
 
-\paragraph{Transformation} A program (dubbed the "traceroute hopper" program while in development) was developed in C++ to parse the \json files and perform direct+indirect ping calculations for each traceroute (see \cref{sec:design_caida}). C++ was chosen for its performance\footnote{Python was originally used but suspected to be slow; switching to C++ yielded a 100\% performance boost, saving several days of processing time.} and availability of \json parsing libraries. Internally the program scans line by line through traceroute \json files, performs necessary calculations to determine \rtts (and in the case of \caida data, occasional \dns resolution), and stores the results in a configurable internal buffer.
+Internally, the traceroute hopper maps a traceroute file into memory with a read-ahead flag set. The forces the operating system into loading the entire file into memory at once so future reads to the file never hit the disk, freeing up disk usage for other processes (such as the database). After loading the program reads through the file line-by-line, as both \ripe Atlas and \caida \json files are composed of thousands of \json objects per file, one for each line. This is shown in \cref{code:load_json}.
 
-\paragraph{Load} Once the traceroute hopper reaches its buffer's capacity, it dumps the contents out to a PostgreSQL database. PostgreSQL was chosen for its performance, advanced features, and in particular its ability to generate spatial indexes, valuable to the \gis oriented work this project involved. Performing basic statistical analyses and fast joins was also a sought-after feature.
+\begin{code}[h]
+    \inputcpp{text/caida/code/load_json.cpp}
+    \caption{Traceroute hopper JSON loading}
+    \label{code:load_json}
+\end{code}
 
-\bigskip
+\subsubsection{Transformation} The next step in the loading process is to perform specific processing on \caida and \ripe Atlas \json formats. The principle layouts of both are nearly identical, but the structure is different and \caida files require \dns lookups on sources\footnote{\caida files are stateful; most lines only contain a \json object describing a traceroute, but those leave out the source \ip address. At the top of each file (or sometimes, multiple times across each file) is a separate \json object that contains information about the source server, and all traceroute entries that follow are sent from that source. The server is given as a hostname, so it needs \dns resolution to obtain an \ip address.}. Since it would be wasteful to construct two entirely separate parsers, the traceroutes are converted to an intermediate format first. The \cli requires an flag for whether the file is of \caida origin or \ripe atlas origin to distinguish between the two; the entire sequence is shown in \cref{code:json_preprocess}
 
+\begin{code}[h]
+    \inputcpp{text/caida/code/preprocess_json.cpp}
+    \caption{CAIDA and RIPE Atlas JSON pre-processing to intermediate format}
+    \label{code:json_preprocess}
+\end{code}
+
+The next stage involves actual ping calculation on traceroutes. The program \cli accepts a flag for this too, allowing the user to turn on indirect calculation. Alternatively the user can switch to "ping" mode, where only the \rtt for the absolute endpoints of the traceroute are calculated. The entire sequence is shown in \cref{code:rtt_calculation}.
+
+\begin{figure}[h]
+    \inputcpp{text/caida/code/rtt_calculation.cpp}
+    \caption{Direct, indirect, and ping mode calculation}
+    \label{code:rtt_calculation}
+\end{figure}
+
+\subsubsection{Load} Once the traceroute hopper reaches its buffer capacity, it dumps the contents out to a PostgreSQL database. This is performed as a streamed operation (again, with optimization in mind) through \textit{libpqxx}, the official C++ client library for PostgreSQL \cite{Vermeulen2019LibPQXX}. This database saving code is shown in \cref{code:caida_db_dump}.
+
+\begin{code}[h]
+    \inputcpp{text/caida/code/save_to_db.cpp}
+    \caption{Dump-to-PostgreSQL traceroute hopper code}
+    \label{code:caida_db_dump}
+\end{code}
+
+PostgreSQL was chosen for its performance, advanced features, and in particular its ability to generate spatial indexes, valuable to the geographic-oriented work this project involved. Performing basic statistical analyses and fast joins was also a sought-after feature.
+
+\subsubsection{Post-processing: Geolocation}
 Once all data was collected in the database it was possible to sort out unique \ips, each of which was fed into a geolocation library (see \cref{sec:background_geolocation}) provided by MaxMind to estimate the location of the machine the \ip address belonged to. This step was delayed until after the \etl process for performance reasons. After processing was completed, the database contained \textapprox71 billion individual \rtt measurements.
 
-\subsection{Data Cleaning \& Initial Processing}
+\subsection{Data Cleaning \& Filtering}
 
-The data required some cleaning before it could be considered viable for serious analysis. For unknown reasons, some collected \rtts were \textit{extremely} large, on the order of hundreds of thousands of millisecond, so such measurements were filtered out. Some servers also showed a consistent tendency towards exceptionally high \rtts (several thousand milliseconds) in a manner that was inconsistent with others, so these too were filtered out (potentially discarding dozens of measurements at a time). Since threshold filters (ex. removal of all points above $x$ ms) risk biasing data, simple Z-score filtering was selected -- values with an absolute Z-score above 2.0 were discarded.
+The data required some cleaning before it could be considered viable for serious analysis, since not all measurements or servers returned results consistent with nearby neighbors, and \rtt based data is vulnerable to influence from outliers. Since threshold filters (ex. removal of all points above $x$ ms) risk biasing data, simple Z-score filtering was selected as the main filtering method. Filtering was performed at two levels levels: during aggregation, after aggregation by \ip address pair.
 
-After cleaning the data was grouped together by source-destination \ip pair. Many pairs had multiple measurements each, so for each the range, the average, standard deviation, measurement count, and range were calculated. This grouping processed also assigned coordinate pairs to each IP pair, enabling geographic processing. After grouping there were \textapprox230 million data points.
+\subsubsection{Aggregating and filtering per IP address pair}
+
+For each \ip address pair there are potentially many measurements. A pair may have 50 perfectly good measurements, for instance, but 1 measurement in the tens of thousands of milliseconds that should be discarded. For each \ip pair the standard deviation was calculated and each measurement for that pair was z-scored; points that exceeded 2.0 (absolute value) were discarded. Since this was performed at the raw data level (operating on \textapprox71 billion rows) it was integrated as part of the \ip-pair aggregation query. This query may be found in \cref{code:agg_query}. This process also involved assigning locations to the endpoints of each of the \ip address pairs.
+
+\begin{code}[h]
+    \inputsql{text/caida/code/agg_query.sql}
+    \caption{Aggregation and base filtering SQL query}
+    \label{code:agg_query}
+\end{code}
+
+\subsubsection{Filtering IP pair outliers}
+
+Some \ip address pairs consistently performed poorly no matter the filtering at the individual measurement level, with \rtt values that far exceed the mean for the entire pool of address pairs. Since these values are also likely to influence results in undesirable ways, they were filtered out using the same z-score method. At this point the data was on the order of a few hundred million rows and was thus suitable for export to more traditional data processing tools, so from this point on filtering was conducted with the Python \textit{pandas} library \cite{pandas}.
+
+\Cref{code:pandas_filtering_ip_pair} shows a snippet of the code responsible for filtering out bad \ip address pairs. The \texttt{df = [expression]} format is repetitive but intended for improved readability; there are better ways of organizing \textit{pandas} code. The code accomplishes several things at once. Line-by-line:
+
+\begin{enumerate}
+    \item Filters the data by direct or indirect ping calculation. \texttt{args.indirect} parameratizes this for \cli use. At the same time, filter to \ip address pairs where the distance between endpoints is greater than 0 (indicates geolocation imprecision) and the \rtt is greater than 0 (indicates timing error).
+    \item Filter \ip address pairs by the z-score of their \texttt{rtt\_avg} field, or the mean of the \rtt for that address pair.
+    \item Calculate a primitive "connectivity" value as milliseconds per kilometer, for all \ip pairs.
+    \item Z-score filtering for \ip pairs based on connectivity, i.e.\ throw out all pairs whose "connectivity" is too far one way or the other.
+\end{enumerate}
+
+\begin{code}[h]
+    \centering
+    \begin{minted}[linenos,breaklines]{python}
+df = df[(df["indirect"] == (1 if args.indirect else 0)) & (df["distance"] > 0) & (df["rtt_avg"] > 0)]
+df = df[np.abs(stats.zscore(df["rtt_avg"])) <= 2.0]
+df["connectivity"] = df["rtt_avg"] / df["distance"]
+df = df[np.abs(stats.zscore(df["connectivity"])) <= 2.0]
+    \end{minted}
+    \caption{Pandas filtering of IP address pairs}
+    \label{code:pandas_filtering_ip_pair}
+\end{code}
+
+After all filtering and aggregating was complete, there were \textapprox230 million data points.

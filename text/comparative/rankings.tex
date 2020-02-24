@@ -1,0 +1,11 @@
+\section{State Ranking Comparisons}\label{sec:comparative-correlations}
+
+Another way of examining the differences between methods is to conduct a test on the correlations between the state rankings produced by each method. Since all methods have different distinguishability graphs, with different valid and invalid comparisons, it's difficult to analyze the similarities between two sets of state rankings directly.
+
+Logically, in any strict ordering, the number of elements that an element in a list is greater than will correspond directly to its position in the list. That is, if an element is \#40 in a list of 50, it should have a "greater-than" count of 10. By counting all statistically valid comparisons where one state has better connectivity than another we can establish a statistically valid method of measuring the correlation between the different methods. That is, if a state is position \#40 according to one method, it should be position \#40 in the other two if the methods are perfectly correlated.
+
+\input{text/comparative/tables/state_better_than_ranks_correlations}
+
+\Cref{tab:states_better_than_correlation} shows a table of each method's correlation to every other method using this technique, including \dns with and without normalization (traceroute is always normalized, site ping never is). The highest correlation displayed is 0.43, between the traceroute and site ping methods, while the lowest is \dns to normalized \dns at 0.21. Regardless, all of these values are very low, suggesting that all methods yield different rankings. Since they're not \textit{too} low, however, it's not unreasonable to assume that certain parts of the rankings are similar, e.g. the tail ends of the rankings.
+
+\todo{Insert a table that shows state rankings for each of the methods?}

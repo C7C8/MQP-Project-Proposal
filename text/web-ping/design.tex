@@ -1,28 +1,26 @@
 \section{Design}\label{sec:design_web_ping}
-\textit{Assigned to: Evan}
-% General overview / introduction
-The WebPing site was developed as a tool for crowd-sourced, automated internet speed testing and mapping. The site measures round trip time between the WebPing user and a website. 
+The "web ping" site was developed as a tool for crowd-sourced, automated internet mapping. The site attempts to measure \rtt between an end user and a website in the top 50 Alexa list. 
 
 \subsection{RTT Measurement}
-There is no standardized protocol for measuring the \rtt to an arbitrary web server using only client-side browser technologies. Our solution was to use the request objects from the web servers and measure the time it takes for the client to receive them. Due to \cors restrictions, the only way for us to request objects was using the \html \texttt{image} tag, which can only request images.
+There is no standardized protocol for measuring the \rtt to an arbitrary web server using only client-side browser technologies. Our solution was to request objects from web servers and measure time taken for the client to receive them. Due to \cors restrictions, the only way for us to request objects was to use the \html \texttt{img} tag, which can only request images.
 
 \TCP, the underlying transport protocol used for \http, performs a "handshake" between server and client when establishing a connection. This handshake requires additional packets to be exchanged, adding time to the overall transaction. In addition, modern web sites use \httpse, which adds \tls encryption, and a \tls handshake following the \tcp handshake. As a result, simply measuring the time it takes to request an object includes much more then just the time to transfer the data.
 
-To work around this, WebPing makes two requests for an object from a web server. The first request, which is not timed, includes the \http \texttt{keep-alive} parameter, which keeps the http connection open after the transaction is complete. The second request is timed, and because the connection was kept open the timing results do not include the overhead of the \tcp and \tls handshakes.
+To work around this, web ping makes two requests for an object from a web server. The first request, which is not timed, includes the \http \texttt{keep-alive} parameter, which keeps the http connection open after the transaction is complete. The second request is timed, and because the connection was kept open the timing results do not include the overhead of the \tcp and \tls handshakes.
 
-Because our goal is to measure \rtt we want the data received by the image tag to be a single packet. We wrote a plugin for the Google Chrome browser that leverages the Chrome developer tools api to find the smallest image loaded by each of the websites we wanted to test.
+Because our goal is to measure \rtt we want the data received by the image tag to be transmitted in a single packet. We wrote a plugin for the Google Chrome browser that leverages the Chrome developer tools \api to find the smallest image loaded by each of the websites we wanted to test.
 
 \subsection{Geolocation}
-WebPing creates and displays a map of the United States with colored data points representing users. The color of the points corresponds to \rtt, and the location of the point on the map shows the geographic location of that user. To determine location, we use a combination of MaxMind DB2, a database of IP addresses and the city they are in, and Texas A\&M's reverse geocoding API. Maxmind is used in cases where we know the user's IP address, but not their location. Texas A\&M's API is used to determine a user's city in cases where the user's device reports a location (e.g. a smartphone) in geographic coordinates. A device-reported location is considered to be more accurate then what is contained in the MaxMind database for mobile devices.
+Web ping creates and displays a map of the United States with colored data points representing users. The color of the points corresponds to \rtt, and the location of the point on the map shows the geographic location of that user. To determine location we used the geolocation techniques described in \cref{sec:background_geolocation}. The MaxMind database is used in cases where we know the user's \ip address, but not their location. Texas A\&M's \api is used to determine a user's city in cases where the user's device reports a location (e.g. a smartphone) in geographic coordinates. A device-reported location is considered to be more accurate then what is contained in the MaxMind database for mobile devices.
 
 \subsection{Connection Type Reporting}
-Since it is important to compare \rtts for comparable devices (e.g. Wired (Ethernet), WiFi, or Cellular), WebPing makes a best-effort attempt to determine each user's connection type.u This is done using the Network Information API. This experimental API is only enabled by default in Google Chrome and Opera, and can be manually enabled on Mozilla Firefox, and is only available on Android browsers - not iOS. Any data that does not include a connection type must be ignored.
+Since it is important to compare \rtts for comparable devices (e.g. wired (Ethernet), WiFi, or cellular), web ping makes a best-effort attempt to determine each user's connection type. This is done using the "network information" browser \api. This experimental \api is only enabled by default in Google Chrome and Opera but can be manually enabled on Mozilla Firefox. On mobile devices it is only available on Android browsers, and not iOS. Any data that does not include a connection type must be ignored.
 
 \subsection{Displaying Results to the User}
-The site displays a map to the user. This allows users to see not only real-time results of their test, but compare their results to others in real time. This was intended to create an appeal for users, as their test results would be meaningless without being able to benchmark them against others in their area and across the country.
+The site displays a map to the user. This allows users to see not only real-time results of their test, but compare their results to others in real time. This was intended to create an appeal to users, as their test results would be meaningless without being able to compare them against others in their area and across the country.
 
 \subsection{Data}
-The data generated by WebPing can be used to better understand the difference in internet connectivity quality across the country.
+The data generated by web ping can be used to better understand the difference in internet connectivity across the country.
 
 % Operating principles
     % Loading small resources

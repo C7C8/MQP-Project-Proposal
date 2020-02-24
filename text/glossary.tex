@@ -3,18 +3,18 @@
 % Acronyms
 % Follow the form: \newacronym{label}{ACRONYM}{expansion}
 % Also: alphabetize!
-\newacronym{anova}{ANOVA}{analysis of variance}
 \newacronym{api}{API}{application programming interface}
 \newacronym{aws}{AWS}{Amazon Web Services}
 \newacronym{caida}{CAIDA}{Center for Applied Internet Data Analysis}
 \newacronym{cdf}{CDF}{cumulative distribution function}
+\newacronym{cli}{CLI}{command-line interface}
 \newacronym{cors}{CORS}{cross-origin resource sharing}
 \newacronym{csv}{CSV}{comma separated value}
-\newacronym{cv}{CV}{coefficient of variation}
 \newacronym{ddos}{DDoS}{distributed denial of service}
 \newacronym{dns}{DNS}{domain name system}
 \newacronym{dsl}{DSL}{digital subscriber line}
 \newacronym{fcc}{FCC}{Federal Communications Commission}
+\newacronym{gdp}{GDP}{gross domestic product}
 \newacronym{gis}{GIS}{geographic information system}
 \newacronym{gps}{GPS}{global positioning system}
 \newacronym{html}{HTML}{Hypertext Markup Language}
@@ -24,15 +24,14 @@
 \newacronym{ip}{IP}{internet protocol}
 \newacronym{ipvs}{IPv6}{internet protocol version 6}
 \newacronym{ipvf}{IPv4}{internet protocol version 4}
-\newacronym{isp}{ISP}{internet service provider}
 \newacronym{json}{JSON}{Javascript Object Notation}
-\newacronym{kde}{KDE}{kernel density estimation}
 \newacronym{mbps}{Mbps}{megabits per second}
 \newacronym{mqp}{MQP}{major qualifying project}
 \newacronym{ntp}{NTP}{Network Time Protocol}
 \newacronym{ripe}{RIPE}{R\'eseaux IP Europ\'eens}
 \newacronym{rtt}{RTT}{round trip time}
 \newacronym{sdk}{SDK}{software development kit}
+\newacronym{svg}{SVG}{scalable vector graphics}
 \newacronym{tcp}{TCP}{transmission control protocol}
 \newacronym{tld}{TLD}{top level domain}
 \newacronym{tls}{TLS}{transport layer security}
@@ -44,16 +43,21 @@
 
 % Acronyms with definitions
 % Follow the form: \newacronym{label}{ACRONYM}{expansion}{description}. Description appears in glossary only.
- \newacronym{cdn}{CDN}{content delivery network}{A Content Distribution Network (CDN), sometimes called a Content Delivery Network, is a network of proxy servers that form a kind of cache used to enhance delivery of content to internet users. Although helpful for internet users, they complicate measurements of connectivity to websites \textit{actually} connecting to the site's servers}
+\newacronym{anova}{ANOVA}{analysis of variance}{Analysis of variance is a class of statistical models and methods for estimation, used to analyze the difference between the means of a sample. Although there are many types, they all fundamentally calculate the probability (a $p$ value) that two population means are equal.}
+
+\newacronym{cdn}{CDN}{content delivery network}{A content distribution network, sometimes called a Content Delivery Network, is a network of proxy servers that form a kind of cache used to enhance delivery of content to internet users. Although helpful for internet users, they complicate measurements of connectivity to websites \textit{actually} connecting to the site's servers}
  
- \newacronym{icmp}{ICMP}{internet control message protocol}{Internet Control Message Protocol (ICMP) is a protocol designed for error reporting and other utility purposes across the internet, typically used most by routers and other intermediary devices}
+\newacronym{cv}{CV}{coefficient of variation}{Coefficients of variation, or relative standard deviations, are defined as the ratio of the absolute value of the mean of a variable divided by its standard deviation: $\frac{\lvert\mu\rvert}{\sigma}$. CVs are dimensionless values that can be judged independent of the original source, making them useful for gauging the spread of any data set. The lower the CV, the lower the spread of the data and the better the quality.}
  
-%  \newacronym{cv}{CV}{coefficient of variance}{Coefficients of variance (CVs) are calculated by dividing the standard deviation of a data set by its mean. CVs are dimensionless values that can be judged independent of the data set, making them useful for gauging the spread of any data set. The lower the CV, the lower the spread of the data and the better the quality}
+\newacronym{ecc}{EC2}{Amazon Elastic Compute Cloud}{EC2 is a service from Amazon Web Services that provides virtual machines in the cloud for general-purpose or task optimized work. EC2 can be configured for different performance and pricing classes, as well as complex auto-scaling schemes or virtual private cloud setups.}
  
- \newacronym{etl}{ETL}{extract, transform, load}{ETL is a generic procedure for extracting data, transforming it into a more useful format, and loading it into a large volume storage system, such as a database. The term closer describes an architecture rather than a specific algorithm}
+\newacronym{etl}{ETL}{extract-transform-load}{Extract-transform-load is a generic procedure for extracting data, transforming it into a more useful format, and loading it into a large volume storage system, such as a database. The term closer describes an architecture rather than a specific algorithm.}
  
- \newacronym{ecc}{EC2}{Amazon Elastic Compute Cloud}{EC2 is a service from Amazon Web Services that provides virtual machines in the cloud for general-purpose or task optimized work. EC2 can be configured for different performance and pricing classes, as well as complex auto-scaling schemes or virtual private cloud setups}
+\newacronym{icmp}{ICMP}{internet control message protocol}{Internet Control Message Protocol is a protocol designed for error reporting and other utility purposes across the internet, typically used most by routers and other intermediary devices.}
+
+\newacronym{isp}{ISP}{internet service provider}{An internet service provider is typically the "last mile" organization that provides a user with internet access --- otherwise known as a \textit{tier 3} ISP. They are distinct from tier 2 and tier 1 ISPs which are responsible for much of the internet backbone, although ISP corporations may operate on multiple tiers. Common ISPs in the US include AT\&T, Comcast, and Verizon.}
  
+\newacronym{kde}{KDE}{kernel density estimation}{Kernel density estimation is a technique for estimating the probability density function of a variable. Briefly, KDEs work by processing each measurement of a variable as if it was at the center of some given probability density function, e.g. a gaussian curve. These curves are then summed together to form one curve and normalized so the area underneath the curve is equal to 1. A KDE chart can be read in the same way as a histogram can, but the $y$ axis corresponds to a density instead of an absolute value. The advantage to using a KDE over a histogram is that KDEs are not vulnerable to binning effects (from choosing the wrong bin size) while histograms are.}
 
 % Glossary entries -- these should be more detailed.
 % Follow the form: \newglossaryentry{LABEL}{name={NAME} description={YOUR TEXT HERE}}

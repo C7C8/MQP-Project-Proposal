@@ -1,14 +1,5 @@
-\chapter{Select Database Design}\label{app:db-queries}
+\chapter{Select Database Design}\label{sec:db_queries}
 
-Some complicated database queries and optimization schemes were used to aggregate \caida and \ripe Atlas traceroute/ping data together. These are reproduced below for possible future use and to clarify on how aggregation \& optimization was performed.
- 
-\section{Raw data tables}
-The below shows the table, partition, and index definitions for our raw data tables for \caida and \ripe Atlas data. Note that it was somewhat naively assumed that IPv6 addresses would represent a relatively small portion of the dataset.
+Some database optimization schemes were used to store \caida and \ripe Atlas traceroute/ping data in a performance-friendly way. These are reproduced below for possible future use and to clarify on the database design. The below shows the table, partition, and index definitions for our raw data tables for \caida and \ripe Atlas data. Note that it was somewhat naively assumed that IPv6 addresses would represent a relatively small portion of the dataset.
 
 \inputsql{text/appendices/sql/table_defs.sql}
-
-\section{Aggregate query w/filtering}
-
-This query was designed to aggregate all source-destination \ip address pairs together and assign locations to each using a pre-computed table of geolocated addresses. It also filters data points by Z-score filtering, eliminating outliers.
-
-\inputsql{text/appendices/sql/agg_query.sql}

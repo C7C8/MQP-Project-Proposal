@@ -1,10 +1,10 @@
-\section{Results}\label{sec:dns_results} % TODO Better section name?
+\section{Collection Results}\label{sec:dns_results} % TODO Better section name?
 
-This section will go over the results of the data collection. %TODO: expand, potentially merge the section with analysis (I mostly just wanted separate files)
+After extensive testing of the scripts and tweaking parameters, we ran several data collection batches, the results of which will be summarized in this chapter.
 
 \subsection{Server Reliability Filtering}
 
-After filtering authoritative and recursive \dns servers for testing reliability (max coefficient of variation in repeated tests = 0.75), we were left with 387 authoritative servers across 50 states and the District of Columbia and 654 recursive servers across 49 states and the District of Columbia. We could not locate an open recursive \dns server, even unreliable, in the state of Rhode Island. \autoref{fig:dns_cache_manipulation_map_of_authoritative_servers} and \autoref{fig:dns_cache_manipulation_map_of_recursive_servers} show the locations of the final server lists for authoritative servers and recursive servers respectively.
+After filtering authoritative and recursive \dns servers for testing reliability (max coefficient of variation in repeated tests = 0.75), we were left with 387 authoritative servers across 50 states and the District of Columbia and 654 recursive servers across 49 states and the District of Columbia. We could not locate an open recursive \dns server, even unreliable, in the state of Rhode Island. \Cref{fig:dns_cache_manipulation_map_of_authoritative_servers} and \cref{fig:dns_cache_manipulation_map_of_recursive_servers} show the locations of the final server lists for authoritative servers and recursive servers respectively.
 
 \todo{Replace with better maps}
 \begin{figure}[H]
@@ -46,7 +46,7 @@ Data collection was done in two main batches, along with two supplemental ones t
     \label{tab:dns_batch_overview}
 \end{table}
 
-Again, as \autoref{tab:dns_batch_overview} shows, the vast majority of data was collected over the course of two collection runs, \#1 and \#2. The first run only conducted five trials for each authoritative-recursive server pair and limited the timeout to for each \texttt{dig} command to two seconds, whereas subsequent runs ran with ten trials and a three second timeout. There are two reasons for this. First, the initial batch was run on \texttt{ccc.wpi.edu}, which has more limitations than the machine used for subsequent runs, \texttt{rambo.wpi.edu}. Additionally, that run was the first major step up from the more limited development test runs and we wanted to minimize time lost in the event something went wrong. On subsequent tests, we had more confidence in the collection scripts and were able to let it run for longer unsupervised.
+Again, as \cref{tab:dns_batch_overview} shows, the vast majority of data was collected over the course of two collection runs, \#1 and \#2. The first run only conducted five trials for each authoritative-recursive server pair and limited the timeout to for each \texttt{dig} command to two seconds, whereas subsequent runs ran with ten trials and a three second timeout. There are two reasons for this. First, the initial batch was run on \texttt{ccc.wpi.edu}, which has more limitations than the machine used for subsequent runs, \texttt{rambo.wpi.edu}. Additionally, that run was the first major step up from the more limited development test runs and we wanted to minimize time lost in the event something went wrong. On subsequent tests, we had more confidence in the collection scripts and were able to let it run for longer unsupervised.
 
 Batch \#3 was run with a limited number of recursive servers located only in Vermont (with the full authoritative server list) while batch \#4 ran with a limited number of authoritative servers located only in Hawaii (with the full recursive server list). These were run after we discovered that we lacked data of the given type for these states. 
 

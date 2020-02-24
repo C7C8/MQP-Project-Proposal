@@ -1,7 +1,7 @@
 \documentclass[12pt,oneside,letterpaper]{memoir}
 \usepackage[style=ieee,citestyle=numeric-comp,sorting=nty,backend=biber]{biblatex}
 \usepackage{todonotes}                                      % Temp
-\input{styles/report.tex} % Don't question it
+\input{styles/report} % Don't question it
 
 \graphicspath{{images/}}
 
@@ -10,7 +10,7 @@
 % \date{September 2019}
 
 % Glossary info goes in the preamble
-\input{text/glossary.tex}
+\input{text/glossary}
 
 % Bibliography goes in the preamble
 \bibliography{references}
@@ -25,21 +25,20 @@
     %%%%%%%%%%%%%%%%%%%%
     
     % Title page
-    % TODO MAKE A FANCY TITLE PAGE
     \frontmatter
     \pagenumbering{gobble}
-    \maketitle
-    \newpage
-    
+    \input{title}
+   
     % Abstract
-    \input{text/abstract.tex}
+    \input{text/abstract}
     \newpage
     
     % Table of contents, list of figures
     \pagenumbering{roman}
+    \listoftodos\newpage
     \tableofcontents\newpage
-    % \listofauthorships
     \listoffigures\newpage
+    \listofcodesnippets\newpage
     \listoftables\newpage
     
     % Switch to arabic page numbering, start headers, and one half spacing.
@@ -51,74 +50,79 @@
     %%% MAIN PAPER CONTENTS %%%
     %%%%%%%%%%%%%%%%%%%%%%%%%%%
     
-    % TO ADD SIGNIFICANT CONTENT:
-    % Add a .tex file under the text folder, put your stuff there, then \input it in the
+    % TO ADD CONTENT:
+    % Add a file under the text folder, put your stuff there, then \input it in the
     % spot where it should go. THIS MEANS YOU DON'T HAVE TO DEAL WITH ONE GIANT MANUSCRIPT!
     
     \chapter{Introduction}\label{sec:introduction}
-    \input{text/introduction.tex}
+    \input{text/introduction}
     
     \acresetall
     \newpage
     \chapter{Background}\label{sec:background}
-    \input{text/background/introduction.tex}
-    \input{text/background/architecture.tex}
-    \input{text/background/speed_test.tex}
-    \input{text/background/traceroutes.tex}
-    \input{text/background/caching.tex}
-    \input{text/background/dns.tex}
-    \input{text/background/cdns.tex}
-    \input{text/background/geolocation.tex}
-    \input{text/background/prior_work.tex}
+    \input{text/background/introduction}
+    \input{text/background/architecture}
+    \input{text/background/speed_test}
+    \input{text/background/traceroutes}
+    \input{text/background/caching}
+    \input{text/background/dns}
+    \input{text/background/cdns}
+    \input{text/background/geolocation}
+    \input{text/background/prior_work}
     
     \newpage
     \chapter{Definitions of Internet Connectivity}\label{sec:connectivity_defs}
-    \input{text/connectivity_definitions.tex}
+    \input{text/connectivity_definitions}
     
     \newpage
     \chapter{Methods}\label{sec:methods}
-    \input{text/methods/overview.tex}
-    \input{text/methods/stats_rankings.tex}
-    \input{text/methods/not_pursued.tex}
+    \input{text/methods/overview}
+    \input{text/methods/stats_rankings}
+    \input{text/methods/not_pursued}
     
     \newpage
     \acresetall
     \chapter{CAIDA \& RIPE Atlas}\label{sec:caida}
-    \input{text/caida/design.tex}
-    \input{text/caida/implementation.tex}
-    \input{text/caida/analysis.tex}
-    \input{text/caida/ranking.tex}
+    \input{text/caida/design}
+    \input{text/caida/implementation}
+    \input{text/caida/analysis}
+    \input{text/caida/ranking}
+    \input{text/caida/conclusion}
     
     \newpage
     \chapter{Web Ping}\label{sec:web-ping}
-    \input{text/web-ping/design.tex}
-    \input{text/web-ping/implementation.tex}
-    \input{text/web-ping/results.tex}
+    \input{text/web-ping/design}
+    \input{text/web-ping/implementation}
+    \input{text/web-ping/results}
     
-    \newpage
+    % \newpage
     \chapter{DNS Cache Manipulation}\label{sec:dns}
-    \input{text/dns/design.tex}
-    \input{text/dns/implementation.tex}
-    \input{text/dns/results.tex}
-    \input{text/dns/analysis.tex}
+    \input{text/dns/design}
+    \input{text/dns/implementation}
+    \input{text/dns/results}
+    \input{text/dns/analysis}
     
     \newpage
-    \chapter{Cumulative Analysis}\label{sec:results_cumulative}
-    \input{text/cumulative_analyses.tex}
+    \chapter{Comparative Analyses}\label{sec:comparative_analyses}
+    \input{text/comparative/intro}
+    \input{text/comparative/distributions}
+    \input{text/comparative/rankings}
+    \input{text/comparative/conclusion}
     
     \newpage
     \chapter{Future Work}\label{sec:future_work}
-    \input{text/future_work.tex}
+    \input{text/future_work}
     
     \newpage
     \chapter{Conclusion}\label{sec:conclusion}
-    \input{text/conclusion.tex}
+    \input{text/conclusion}
     
     % TODO Make sure appendix formatting works correctly
     \newpage
     \begin{appendices}
-        \input{text/appendices/code.tex}\newpage
-        \input{text/appendices/db_queries.tex}
+        \crefalias{chapter}{appsec}
+        \input{text/appendices/code}
+        \input{text/appendices/db_queries}
     \end{appendices}
 
     %%%%%%%%%%%%%%%%%%%
@@ -139,13 +143,13 @@
     % \setglossarystyle{mcolindex} 
     \setlength{\glspagelistwidth}{0.4\textwidth}
     \setglossarystyle{long3colheader}
-    \printglossary[type=\acronymtype]
+    \printglossary[type=\acronymtype,]
     \addcontentsline{toc}{chapter}{Acronyms}
     \normalsize
     
     \setglossarystyle{index}
     \addcontentsline{toc}{chapter}{Glossary}
-    \printglossary
+    \printglossary[nonumberlist]
     
     % Bibliography, automagically managed in IEEE style.
     \newpage

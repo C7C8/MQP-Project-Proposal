@@ -16,8 +16,7 @@ To visualize this we developed the concept of a distinguishability graph. Briefl
 \begin{figure}[h]
     \centering
     \includegraphics[width=\textwidth]{caida/caida_network_invalid_comps.png}
-    \caption{Indistinguishability graph (at $p\geq0.05$) for pairwise state comparisons}
-    \label{fig:caida_network_invalid_comps}
+    \repeatcaption{fig:caida_network_invalid_comps}{Indistinguishability graph (at $p\geq0.05$) for pairwise state comparisons}
 \end{figure}
 
 \Cref{fig:caida_network_invalid_comps} shows an example of such a graph, for pairwise state comparisons. Each edge between states represents a comparison that \textit{cannot} be made (making this an \textbf{in}distinguishability graph), red-highlighted edges are bridges, and node colors correspond to the community that node belongs to. On this particular graph there are no disjoint subgraphs, so ranking by clusters of states is not possible. In graphs where their are disjoint subgraphs, however, ranking by clustered states would be possible.
@@ -25,12 +24,13 @@ To visualize this we developed the concept of a distinguishability graph. Briefl
 \begin{figure}[h]
     \centering
     \includegraphics[width=\textwidth]{images/caida/caida_network_valid_comps.png}
-    \caption{Distinguishability graph (at $p<0.05$) for pairwise state comparisons}
-    \label{fig:caida_network_valid_comps}
+    \repeatcaption{fig:caida_network_valid_comps}{Distinguishability graph (at $p<0.05$) for pairwise state comparisons}
 \end{figure}
 
 \Cref{fig:caida_network_valid_comps} shows an example of a distinguishability graph at the $p<0.05$ level; since edges here represent comparisons between states that \textit{are} distinguishable, this graph is drawn as a directed graph. The direction of the edge follows the order of which state has better connectivity (the ancestor of a node has better connectivity). This opens up new possibilities for the ranking of states \textit{without} relying on traditional sorting algorithms.
 
-\subsection{Topologically-sorted state rankings}
+\subsection{Topologically-sorted state rankings}\label{sec:methods_stats_topological_rankings}
 
-A graph of states that are distinguishable is most naturally represented as a directed graph. When conducting comparisons it's possible to calculate a ratio between the states based on the fraction of connectivity quality that the worse state has to the second (a value ranging from 0-1). These ratios can be used as weights along edges between states, allowing a topological sort of the graph to be conducted. Edges with weights that are higher are explored first (since they correspond to states that are closer to being equal). The result may not be entirely intuitive at first and undoubtedly has some oddities from the unusual sorting method, but it is far more statistically valid than a naive mean/median-based sort.
+A graph of states that are distinguishable is most naturally represented as a directed graph. When conducting comparisons it's possible to calculate a ratio between the states based on the fraction of connectivity quality that the worse state has to the second (a value ranging from 0-1). These ratios can be used as weights along edges between states, allowing a topological sort of the graph to be conducted. Edges with weights that are higher are explored first (since they correspond to states that are closer to being equal). The result may not be entirely intuitive at first and undoubtedly has some oddities from the unusual sorting method, but may be useful in addition to a simple mean/median-based sort.
+
+One drawback of the topological sort method is that it implicitly compares states that according to the Kruskal-Wallis test cannot actually be compared. For instance, if you have $CA\rightarrow MA$ and $CA\rightarrow TX$, but the comparison between $MA$ and $TX$ isn't supported by the data, the topological sort method must choose between them somehow. That choosing process is an implicit comparison, making the topological sort method a rough guess at state rankings at best.

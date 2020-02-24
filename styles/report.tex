@@ -1,10 +1,14 @@
+\let\memoirnewfloat\newfloat
+\let\memoirnewlistof\newlistof
+\usepackage[T1]{fontenc}
+\usepackage{etoolbox}                                       % Misc
 \usepackage{hyperref}                                       % Make table of contents clickable, allow URLs
 \usepackage{textcomp}                                       % For tilde
 \usepackage{graphicx}                                       % Images
 \usepackage{array}                                          % Table spacing
 \usepackage{ragged2e}                                       % Left align table text
 \usepackage{caption}                                        % Use to create the \repeatcaption command
-\usepackage{float}                                          % Image placement
+\usepackage{float}
 \usepackage[fit]{truncate}                                  % Truncate section names in the header
 \usepackage{charter}                                        % Charter font
 % \usepackage[]{cabin}                                      % Cabin font
@@ -12,6 +16,7 @@
 % \usepackage{bookman}                                        % Bookman font
 \usepackage[acronym,noredefwarn]{glossaries}                % Glossary, acronyms list, etc
 \usepackage{acronym}                                        % Acronym specific things
+\usepackage{xspace}                                         % Make acronym spacing better
 \usepackage{glossary-mcols}                                 % Multi-column glossary or acronyms list
 \usepackage{xparse}                                         % Better parsing for macros
 \usepackage[detect-all]{siunitx}                            % SI unit formatting
@@ -22,24 +27,38 @@
 \usepackage{microtype}                                      % General typography improvements
 \usepackage[english]{babel}                                 % For "fancy" quotes
 \usepackage[autostyle, english=american]{csquotes}          % Same
-\usepackage{wrapfig}                                        % Figures wrapped by text
 \usepackage{cleveref}                                       % Improved cross references
+\usepackage{multirow}
+\usepackage{multicol}
+\usepackage{svg}
 
-\MakeOuterQuote{"}                                          % For fancy quotes
-\hypersetup{colorlinks=true,                                % Blue hyperlinks, everything else black
+% Default graphics width
+\setkeys{Gin}{width=\textwidth}
+
+% For fancy quotes
+\MakeOuterQuote{"}                                          
+
+% Blue hyperlinks, everything else black
+\hypersetup{colorlinks=true,                                
             urlcolor=blue,
             citecolor=black,
             linkcolor=black}
-% \renewcommand\familydefault{\sfdefault}                     % Sans serif
-\newcommand{\textapprox}{\raisebox{0.1ex}{\texttildelow}}   % Add a ~ character for approximate values
-\newcommand{\repeatcaption}[2]{                             % \repeatcaption command for reusing figures
+
+% Sans serif
+% \renewcommand\familydefault{\sfdefault}
+
+% Add a ~ character for approximate values
+\newcommand{\textapprox}{\raisebox{0.1ex}{\texttildelow}}   
+
+% \repeatcaption command for reusing figures
+\newcommand{\repeatcaption}[2]{                             
   \renewcommand{\thefigure}{\ref{#1}}
   \captionsetup{list=no}
   \caption{#2 (repeated from page \pageref{#1})}
 }
 
 % Fix code centering
-\RecustomVerbatimEnvironment{Verbatim}{BVerbatim}{}
+% \RecustomVerbatimEnvironment{Verbatim}{BVerbatim}{}
 
 % 1 in margins
 \setulmarginsandblock{1in}{1in}{*}
@@ -47,25 +66,9 @@
 \checkandfixthelayout
 
 % Head and chapter styles
-% \setlength\prechapterprecisshift{0pt}
-% \headstyles{komalike}
-
-% Good:
 \chapterstyle{madsen}
-% \chapterstyle{ell}
 
-% Okay:
-% \chapterstyle{veelo}
-% \chapterstyle{dash}
-% \chapterstyle{verville}
-% \chapterstyle{dowding}
-% \chapterstyle{southall}
-% \chapterstyle{demo2}
-% \chapterstyle{chappell}
-% \chapterstyle{ger}
-
-
-% Show subsection numbers and entries in TOC
+% Show subsection numbers and entries in TOC; make subsection the max numbered depth
 \setsecnumdepth{subsection}
 \maxtocdepth{subsection}
 
@@ -79,15 +82,14 @@
 % \setlength{\afterchapskip}{0.3em}
 % \setlength{\belowcaptionskip}{-0.1em}
 
-% Macro for acronyms with description
+% Macro for acronyms with description; auto def's short-form macros for each acronym
 \let\newacronymsaved\newacronym
-% \def\?#1{}
 \RenewDocumentCommand\newacronym{mmmg}{
     % Fuck all ye who enter here
-    \expandafter\newcommand\expandafter{\csname #1\endcsname}[0]{\gls{#1}\,}
-    \expandafter\newcommand\expandafter{\csname #1s\endcsname}[0]{\glspl{#1}\,}
-    \expandafter\newcommand\expandafter{\csname #2\endcsname}[0]{\Gls{#1}\,}
-    \expandafter\newcommand\expandafter{\csname #2s\endcsname}[0]{\Glspl{#1}\,}
+    \expandafter\newcommand\expandafter{\csname #1\endcsname}[0]{\gls{#1}\xspace}
+    \expandafter\newcommand\expandafter{\csname #1s\endcsname}[0]{\glspl{#1}\xspace}
+    \expandafter\newcommand\expandafter{\csname #2\endcsname}[0]{\Gls{#1}\xspace}
+    \expandafter\newcommand\expandafter{\csname #2s\endcsname}[0]{\Glspl{#1}\xspace}
     \IfNoValueTF{#4}{
         \newacronymsaved{#1}{#2}{#3}
     } {
@@ -99,7 +101,8 @@
                             plural={⟨#2⟩\glspluralsuffix},
                             firstplural={⟨#3⟩\glspluralsuffix\space (⟨#2⟩\glspluralsuffix)},
                             see=[Glossary:]{#1-gls}}
-        \newglossaryentry{#1-gls}{name={#2}, description={#4. \textit{See pgs}}}
+        % \newglossaryentry{#1-gls}{name={#2}, description={#4. \textit{See pgs}}}
+        \newglossaryentry{#1-gls}{name={#2}, description={#4}}
     }
 }
 
@@ -112,9 +115,53 @@
 \DeclareCaptionType{formula}[][]
 \captionsetup[formula]{name=Formula,labelformat=default,font={it,small},margin=0.5in}
 
+% WPI color defs
+\definecolor{WPIRed}{rgb}{0.769, 0.071, 0.188}
+\definecolor{WPIGrey}{rgb}{0.698, 0.718, 0.729}
+
+% A new column type for highlighting select columns in a table
+\newcommand{\colorrule}[3]{\textcolor{#3}{\rule{#1}{#2}}}
+
+% Fancy SQL file environment
 \newmintedfile[inputsql]{postgresql}{
+    xleftmargin=20pt,
     linenos,
     autogobble,
     breaklines,
     fontsize=\footnotesize,
 }
+\newmintedfile[inputcpp]{cpp}{
+    xleftmargin=20pt,
+    linenos,
+    autogobble,
+    breaklines,
+    fontsize=\footnotesize
+}
+
+% "Code" figure environment
+\newcommand{\codename}{Snippet}
+\newcommand{\listcodename}{List of Code Snippets}
+\memoirnewlistof{listofcodesnippets}{locs}{\listcodename}
+\memoirnewfloat[chapter]{code}{locs}{\codename}
+\newlistentry{code}{locs}{0}
+\crefname{code}{snippet}{snippets}
+
+% Make code snippets have the same blank spaces between chapters in the list of snippets
+\renewcommand{\insertchapterspace}{%
+    \addtocontents{lof}{\protect\addvspace{10pt}}%
+    \addtocontents{lot}{\protect\addvspace{10pt}}%
+    \addtocontents{locs}{\protect\addvspace{10pt}}%
+}
+
+% Code environment respects frontmatter/mainmatter/backmatter
+\makeatletter
+\g@addto@macro\@memfront@floats{\counterwithout{code}{chapter}}
+\g@addto@macro\@memmain@floats{\counterwithin{code}{chapter}}
+\g@addto@macro\@memback@floats{%
+  \counterwithin{code}{chapter}%
+  \setcounter{code}{0}%
+}
+\makeatother
+
+% Appendices cref'd properly
+\crefname{appsec}{appendix}{appendices}
