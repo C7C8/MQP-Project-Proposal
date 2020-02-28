@@ -24,13 +24,14 @@
 \usepackage{minted}                                         % Code!
 \usepackage{amsmath}                                        % Math
 \usepackage{caption}                                        % Captions for formulas
-\usepackage{microtype}                                      % General typography improvements
+\usepackage[activate={true,nocompatibility},final,tracking=true,factor=1100,stretch=10,shrink=10]{microtype}                                      % General typography improvements
 \usepackage[english]{babel}                                 % For "fancy" quotes
 \usepackage[autostyle, english=american]{csquotes}          % Same
 \usepackage{cleveref}                                       % Improved cross references
 \usepackage{multirow}
 \usepackage{multicol}
 \usepackage{svg}
+\usepackage{wrapfig}
 
 % Default graphics width
 \setkeys{Gin}{width=\textwidth}
@@ -63,10 +64,13 @@
 % 1 in margins
 \setulmarginsandblock{1in}{1in}{*}
 \setlrmarginsandblock{1in}{1in}{*}
+% \setlrmarginsandblock{1in}{0.75in}{*}
 \checkandfixthelayout
 
 % Head and chapter styles
-\chapterstyle{madsen}
+% \chapterstyle{madsen}
+% \chapterstyle{lhyne}
+\chapterstyle{ell}
 
 % Show subsection numbers and entries in TOC; make subsection the max numbered depth
 \setsecnumdepth{subsection}
@@ -112,8 +116,8 @@
 \DeclareSIUnit{\byte}{B}
 
 % Captioned equation (formula) environment
-\DeclareCaptionType{formula}[][]
-\captionsetup[formula]{name=Formula,labelformat=default,font={it,small},margin=0.5in}
+% \DeclareCaptionType{formula}[][]
+% \captionsetup[formula]{name=Formula,labelformat=default,font={it,small},margin=0.5in}
 
 % WPI color defs
 \definecolor{WPIRed}{rgb}{0.769, 0.071, 0.188}
@@ -138,6 +142,14 @@
     fontsize=\footnotesize
 }
 
+% "Formula" figure environment
+\newcommand{\formulaname}{Formula}
+\newcommand{\listformulaname}{List of Formulas}
+\memoirnewlistof{listofcodesnippets}{lofm}{\listformulaname}
+\memoirnewfloat[chapter]{formula}{lofm}{\formulaname}
+\newlistentry{formula}{lofm}{0}
+\crefname{formula}{formula}{formulas}
+
 % "Code" figure environment
 \newcommand{\codename}{Snippet}
 \newcommand{\listcodename}{List of Code Snippets}
@@ -151,6 +163,7 @@
     \addtocontents{lof}{\protect\addvspace{10pt}}%
     \addtocontents{lot}{\protect\addvspace{10pt}}%
     \addtocontents{locs}{\protect\addvspace{10pt}}%
+    \addtocontents{lofm}{\protect\addvspace{10pt}}%
 }
 
 % Code environment respects frontmatter/mainmatter/backmatter

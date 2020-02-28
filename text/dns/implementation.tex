@@ -109,11 +109,11 @@ result is not None
 
 \subsubsection{Testing Reliability}
 
-\Cref{fig:auth_reliability_snippet} is a snippet of code, modified for formatting, that we used to verify the reliability of candidate authoritative servers. The code was passed a domain and \ip address for the authoritative server under tests. For a given number of trials, configured to 20 for every batch, the query time for a request made directly to the authoritative server for a domain we have already confirmed it was an authority for, was recorded (for a definition of a valid result, see \cref{sec:dns_impl_confirmation_of_status_and_type} and \cref{fig:auth_conf_snippet}). After all results were recorded, the authoritative server's \ip address was output if there were at least two successful results and the \cv was less than or equal to the threshold, configured to 0.5 for all tests.
+\Cref{fig:auth_reliability_snippet} is part of the code (modified for formatting) used to verify the reliability of candidate authoritative servers. The code was passed a domain and \ip address for the authoritative server under tests. For a given number of trials, configured to 20 for every batch, the query time for a request made directly to the authoritative server for a domain we have already confirmed it was an authority for, was recorded (for a definition of a valid result, see \cref{sec:dns_impl_confirmation_of_status_and_type} and \cref{fig:auth_conf_snippet}). After all results were recorded, the authoritative server's \ip address was output if there were at least two successful results and the \cv was less than or equal to the threshold, configured to 0.5 for all tests.
 
-\begin{code}[H]
+\begin{code}[h]
 \centering
-    \begin{minted}{python}
+    \begin{minted}[linenos]{python}
     for _ in range(trials):
         result = run_dig(domain=domain, target_server=target_ip)
         if <result is valid>:
@@ -161,15 +161,17 @@ Priming the \dns cache was performed by making a single \dns query to \texttt{re
 
 \Cref{fig:dns_latency_snippet} shows the code that we used to measure the latency between the testing location and the recursive \dns server under test. For all tests, \texttt{tries = 10}, meaning that for each test for a given server pair, there were 10 latency measurements. Of the measurements, we kept the lowest one, as this indicated the shortest observed latency.
 
-\begin{code}[H]
+\begin{code}[h]
 \centering
+\begin{minipage}{0.66\textwidth}
     \begin{minted}{python}
 [run_dig(domain=authoritative_domain, 
         target_server=recursive_ip, 
         time=TIME_LIMIT) 
     for _ in range(tries)]
     \end{minted}
-    \caption{DNS Latency Snippet}
+\end{minipage}
+    \caption{DNS latency snippet}
     \label{fig:dns_latency_snippet}
 \end{code}
 
@@ -179,9 +181,9 @@ The authoritative domain is provided without any subdomain, as we know that, due
 
 Similar to the snippet for measuring latency, \cref{fig:dns_lookup_rtt_snippet} shows the snippet for measuring the total lookup time. Notably, a 12 character, randomized subdomain is added to the target authoritative server's domain. Once again, the number of observations was configured to 10 for all trials, and the minimum observed value was kept.
 
-\begin{code}[H]
+\begin{code}[h]
 \centering
-    \begin{minted}{python}
+    \begin{minted}[linenos]{python}
 [run_dig(domain="{}.{}".format(rand_subdomain(), authoritative_domain),
         target_server=recursive_ip, 
         time=TIME_LIMIT) 

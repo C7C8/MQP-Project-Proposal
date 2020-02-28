@@ -1,0 +1,29 @@
+\section{Future Work}
+
+\subsection{Improving site ping data collection}
+
+One potential issue with the way we selected the images to load for site ping is that we did not consider where the images were hosted. Most websites utilize a \cdn to serve their content, and most of the image files used for the "ping" were, in fact, located on a \cdn. The ping results are therefore more of a measure of the user's connection to that particular \cdn than to the site as a whole. A revised Site Ping app could measure ping times for one object from each domain a site loads content from and take an average.
+
+\subsection{More accurate IP Geolocation}
+
+One of the things that could improve the quality of the data collected is more accurate \ip address geolocation. One way this could be done would be the use of more then one IP geolocation service and flag data points where the services don't agree as questionable. Another way geolocation could be improved would be through the use of up to date of a constantly updating database. \ip addresses to move around, even across state lines, based on how the \isp decides to allocate them. Using a continuously updated database would allow for each data point to be logged exactly where it is.
+
+\subsection{More recursive and authoritative servers for each state}
+
+One of the issues with the \dns cache manipulation method is that it lacked a recursive \dns server in Rhode Island. Additionally, several states had only a single server of a given type. Therefore, future iterations of this method could expand the geographic diversity of servers under test.
+
+\subsection{Backbone Analysis}
+
+One of the methods discussed in \cref{sec:design_unused_methods} is "backbone analysis". To briefly summarize, the idea was to to examine every indirectly calculated hop (\cref{sec:caida_results}) from the \caida and \ripe atlas dataset and consider those as edges on a graph, where the endpoints of the hop are vertices on the graph. A \textit{massive} graph could be established in this way, giving rise to numerous possibilities for analysis based in graph theory.
+
+Using graph theory methods it would be possible to identify nodes that are part of the internet backbone, and measure connectivity to \textit{those} instead. This provides a far more centralized region of the internet to measure connectivity to, which may improve the quality of the analyses if implemented. It would also give insight on what fraction of traffic passes through the backbone, which could be another interesting metric for connectivity.
+
+\subsection{Surveys \& Subjective User Experience}
+
+Although described in \cref{sec:background}, we ultimately did not pursue methods of collecting data on consumer-oriented statistics like cost, advertised speeds, data caps, or connection stability. These are harder to gather data on using purely technical means -- there is no series of servers we can query like in the \dns method, and there are no databanks of this sort of information available for scraping. To gather real data on the subject it would be necessary to communicate with actual users instead of just their browsers.
+
+This implies a survey of some kind, asking users to provide quantitative information like how much they pay for internet, how fast their internet seems to be, or what their data cap is. Although more challenging to analyze, gathering data on qualitative measures like apparent connection stability may also be useful, although less reliable. These are methods that we did not consider at the start of our project, but that future researchers may be interested in pursuing.
+
+\subsection{IPv6 Availability}
+
+As mentioned in \cref{sec:connectivity_defs} it might be useful to measure the availability of \ipvs by region, along with mitigating measures like \ipvs-over-\ipvf tunnels. \ipvf address exhaustion is becoming more and more urgent, with the \ripe Network Coordination Center recording exhaustion of their pool in Europe on 25 November 2019 \cite{ReseauxIPEuropeensNetworkCoordinationCentre2019a}. As difficulty of obtaining an \ipvf address increases and network infrastructure is strained further, future researchers will likely want to examine \ipvs availability as a metric for whether internet connections will even be possible in a region.

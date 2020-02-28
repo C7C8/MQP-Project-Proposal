@@ -1,7 +1,8 @@
 \documentclass[12pt,oneside,letterpaper]{memoir}
 \usepackage[style=ieee,citestyle=numeric-comp,sorting=nty,backend=biber]{biblatex}
 \usepackage{todonotes}                                      % Temp
-\input{styles/report} % Don't question it
+
+\input{styles/report}
 
 \graphicspath{{images/}}
 
@@ -82,7 +83,9 @@
     
     \newpage
     \acresetall
-    \chapter{CAIDA \& RIPE Atlas}\label{sec:caida}
+    \chapter{RTT to Everywhere: Traceroute Analysis}\label{sec:caida}
+    \todo{Add intro to CAIDA about connection defs}
+    \input{text/caida/intro}
     \input{text/caida/design}
     \input{text/caida/implementation}
     \input{text/caida/analysis}
@@ -90,13 +93,15 @@
     \input{text/caida/conclusion}
     
     \newpage
-    \chapter{Web Ping}\label{sec:web-ping}
+    \chapter{RTT to Top Websites: Site Ping}\label{sec:web-ping}
+    \input{text/web-ping/intro}
     \input{text/web-ping/design}
     \input{text/web-ping/implementation}
     \input{text/web-ping/results}
     
     % \newpage
-    \chapter{DNS Cache Manipulation}\label{sec:dns}
+    \chapter{Intra-DNS Server RTT: DNS Cache Manipulation}\label{sec:dns}
+    \input{text/dns/intro}
     \input{text/dns/design}
     \input{text/dns/implementation}
     \input{text/dns/results}
@@ -123,6 +128,7 @@
         \crefalias{chapter}{appsec}
         \input{text/appendices/code}
         \input{text/appendices/db_queries}
+        \input{text/appendices/sites}
     \end{appendices}
 
     %%%%%%%%%%%%%%%%%%%

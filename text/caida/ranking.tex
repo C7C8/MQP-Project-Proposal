@@ -1,33 +1,31 @@
-\section{State rankings}
+\section{State Rankings}
 
-Using the statistical \& in/distinguishability graph methods described in \cref{sec:stats_methods}, we were able to develop both graph visualizations of state distinguishability and a possible ranking of the states.
+Using the statistical and (in)distinguishability graph methods described in \cref{sec:stats_methods}, we were able to develop both graph visualizations of state distinguishability and a possible ranking of the states.
 
 \begin{figure}[h]
     \centering
     \includegraphics{caida/caida_network_invalid_comps.png}
-    \caption{Indistinguishability graph of CAIDA+Atlas data as aggregated by state}
+    \caption{Indistinguishability graph of traceroute data as aggregated by state}
     \label{fig:caida_network_invalid_comps}
 \end{figure}
 
 \Cref{fig:caida_network_invalid_comps} shows an indistinguishability graph of comparisons between the states (previously seen in \cref{sec:stats_methods}), where node colors correspond to communities and bold red lines correspond to bridges.\footnote{Bridges can be thought of as indicators of comparison quality; any state on the end of a bridge can be compared to all but one of the other states.} As noted earlier, this graph has no disjoint subgraphs, so ranking by clusters is not possible. \Cref{fig:caida_network_valid_comps} shows the corresponding distinguishability graph, which is much more connected, indicating this data is a good candidate for the topological sort method.
 
-\suppressfloats % fix a bug with longtable
 \begin{figure}[h]
     \centering
     \includegraphics{caida/caida_network_valid_comps.png}
-    \caption{Distinguishability graph of CAIDA+Atlas data as aggregated by state}
+    \caption{Distinguishability graph of traceroute data as aggregated by state}
     \label{fig:caida_network_valid_comps}
 \end{figure}
 
-When sorted we obtain a list of 49 states (including the District of Columbia); two states were not reachable by a maximal topological sort (described in \cref{sec:methods_stats_topological_rankings}). \Cref{tab:caida_topological_state_rankings} shows this ranking, which roughly confirms what we'd expect based on prior notions and the heatmaps. Since the topological sort method is based on a graph interpretation and not a traditional sort of means or medians, those values are not shown alongside the states.
+When sorted we obtain a list of 49 states (including the District of Columbia; Hawaii and Alaska were unreachable); two states were not reachable by a maximal topological sort (described in \cref{sec:methods_stats_topological_rankings}). \Cref{tab:caida_topological_state_rankings} shows this ranking, which roughly confirms what we would expect based on prior notions and the heatmaps. Since the topological sort method is based on a graph interpretation and not a traditional sort of means or medians, those values are not shown alongside the states.
 
-\suppressfloats % fix a bug with longtable
 \input{text/caida/tables/topological_state_ranks.tex}
 
 \begin{figure}[h]
     \centering
     \includegraphics{images/comparative/confidence_intervals/caida_confidence_interval.png}
-    \caption{CAIDA + RIPE Atlas confidence intervals for rankings; higher is better}
+    \caption{Traceroute confidence intervals for rankings; higher is better}
     \label{fig:caida_confidence_intervals}
 \end{figure}
 

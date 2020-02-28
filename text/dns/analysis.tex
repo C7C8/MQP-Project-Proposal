@@ -11,9 +11,9 @@ Additionally, calculating the speed of the connection, not just the total \rtt, 
 
 \Cref{fig:dns_analytics_median_dist} shows the distribution of the median true \rtt values for all locations. It shows that the data takes on a bimodal distribution with peaks around 45ms and 68ms with a heavy bias towards the former.
 
-\begin{figure}[H]
+\begin{figure}[h]
     \centering
-    \includegraphics[width=\textwidth]{images/dns/dist_raw_data/dns_rtt_median_distribution.png}
+    \includegraphics{images/dns/dist_raw_data/dns_rtt_median_distribution.png}
     \caption{DNS RTT Median Distribution}
     \label{fig:dns_analytics_median_dist}
 \end{figure}
@@ -22,9 +22,9 @@ Additionally, calculating the speed of the connection, not just the total \rtt, 
 
 After normalizing by distance, the bimodality all but disappears, as \cref{fig:dns_analytics_norm_median_dist} shows. In this chart, the distribution pears around 30km/ms.
 
-\begin{figure}[H]
+\begin{figure}[h]
     \centering
-    \includegraphics[width=\textwidth]{images/dns/dist_raw_data/dns_norm_rtt_median_distribution.png}
+    \includegraphics{images/dns/dist_raw_data/dns_norm_rtt_median_distribution.png}
     \caption{DNS Normalized RTT Median Distribution}
     \label{fig:dns_analytics_norm_median_dist}
 \end{figure}
@@ -33,18 +33,18 @@ After normalizing by distance, the bimodality all but disappears, as \cref{fig:d
 
 \Cref{fig:dns_true_rtt_heatmap} shows a heatmap based on true \dns \rtt measurements. This map shows that a significant portion of Western US has poor \dns \rtts. In contrast to the West, a majority of the the East Coast performs better. As we discuss later, this is likely due to the higher quantity of authoritative servers present in the East. Another highlight is that the South is rather inconsistent: Mississippi is probably the most homogeneous in being bad, but Alabama, Georgia, Louisiana, Tennessee, Missouri, and even eastern Texas are rather "splotchy", for lack of a better term.
 
-\begin{figure}[H]
+\begin{figure}[h]
     \centering
-    \includegraphics[width=\textwidth]{images/dns/heatmaps/dns_rtt_idw.jpg}
+    \includegraphics{images/dns/heatmaps/dns_rtt_idw.jpg}
     \caption{DNS True RTT Heatmap}
     \label{fig:dns_true_rtt_heatmap}
 \end{figure}
 
-\Cref{fig:dns_normalized_rtt_heatmap} shows a similar heatmap, but for distance normalized \dns \rtt data. In stark contrast to the prior map, the West Coast displays significantly better performance - likely due to the distance to eastern authoritative servers being cancelled out. The Midwest and mid-Atlantic regions fare much worse, while the South is far more consistent in its poor results. The two main regions that remain consistent between the two maps are the North East and Colorado/Wyoming.
+\Cref{fig:dns_normalized_rtt_heatmap} shows a similar heatmap, but for distance normalized \dns \rtt data. In stark contrast to the prior map, the West coast displays significantly better performance - likely due to the distance to eastern authoritative servers being cancelled out. The Midwest and mid-Atlantic regions fare much worse, while the South is far more consistent in its poor results. The two main regions that remain consistent between the two maps are the North East and Colorado/Wyoming.
 
-\begin{figure}[H]
+\begin{figure}[h]
     \centering
-    \includegraphics[width=\textwidth]{images/dns/heatmaps/dns_speed_of_light_idw.jpg}
+    \includegraphics{images/dns/heatmaps/dns_speed_of_light_idw.jpg}
     \caption{DNS Normalized RTT Heatmap}
     \label{fig:dns_normalized_rtt_heatmap}
 \end{figure}
@@ -116,14 +116,14 @@ We chose to proceed with \texttt{v=1.0}, which left the vast majority of pairs i
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{images/dns/analysis_no_auth_agg/rtt/all_pairs_histogram.png}
+    \includegraphics{images/dns/analysis_no_auth_agg/rtt/all_pairs_histogram.png}
     \caption{DNS True RTT Pair Histogram}
     \label{fig:dns_true_rtt_pair_histogram}
 \end{figure}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{images/dns/analysis_no_auth_agg/rtt/all_pairs_histogram.png}
+    \includegraphics{images/dns/analysis_no_auth_agg/rtt/all_pairs_histogram.png}
     \caption{DNS Normalized RTT Pair Histogram}
     \label{fig:dns_norm_rtt_pair_histogram}
 \end{figure}
@@ -148,7 +148,7 @@ To determine the validity of the rankings proposed above we used the Kruskal-Wal
 
 \begin{figure}[H]
     \centering
-    \includesvg[width=\textwidth]{images/dns/analysis_no_auth_agg/rtt/no_auth_agg_true_rtt_graph.svg}
+    \includesvg{images/dns/analysis_no_auth_agg/rtt/no_auth_agg_true_rtt_graph.svg}
     \caption{DNS True RTT Indistinguishable States Graph}
     \label{fig:dns_true_rtt_indistinguishable_states_graph}
 \end{figure}
@@ -163,7 +163,7 @@ Also notable is Louisiana: the state ranks \#22(t), but is labeled as indistingu
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{images/dns/analysis_no_auth_agg/rtt/no_auth_distinct_rtt_map.png}
+    \includegraphics{images/dns/analysis_no_auth_agg/rtt/no_auth_distinct_rtt_map.png}
     \caption{DNS True RTT State Groupings}
     \label{fig:dns_true_rtt_indistinguishable_states_map}
 \end{figure}
@@ -173,7 +173,7 @@ Also notable is Louisiana: the state ranks \#22(t), but is labeled as indistingu
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{images/dns/analysis_no_auth_agg/rtt/no_auth_agg_rtt_confidence.jpg}
+    \includegraphics{images/dns/analysis_no_auth_agg/rtt/no_auth_agg_rtt_confidence.jpg}
     \caption{DNS True RTT Confidence Intervals}
     \label{fig:dns_true_rtt_confidence_intervals}
 \end{figure}
@@ -182,7 +182,7 @@ Finally, for true \rtt, \cref{fig:dns_true_rtt_confidence_intervals} shows boots
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{images/dns/analysis_no_auth_agg/rtt/no_auth_distinct_rtt_map_condensed.png}
+    \includegraphics{images/dns/analysis_no_auth_agg/rtt/no_auth_distinct_rtt_map_condensed.png}
     \caption{DNS True RTT Indistinguishable States Map Condensed Colors}
     \label{fig:dns_true_rtt_indistinguishable_states_map_condensed_colors}
 \end{figure}
@@ -191,7 +191,7 @@ Similar to the graph for true \rtt, \cref{fig:dns_normalized_rtt_indistinguishab
 
 \begin{figure}[H]
     \centering
-    \includesvg[width=\textwidth]{images/dns/analysis_no_auth_agg/rtt_normalized/no_auth_agg_norm_rtt_graph.svg}
+    \includesvg{images/dns/analysis_no_auth_agg/rtt_normalized/no_auth_agg_norm_rtt_graph.svg}
     \caption{DNS Normalized RTT Indistinguishable States Graph}
     \label{fig:dns_normalized_rtt_indistinguishable_states_graph}
 \end{figure}
@@ -202,14 +202,14 @@ Mapping the distinct sub graphs for normalized \dns \rtt shows a majority of the
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{images/dns/analysis_no_auth_agg/rtt_normalized/no_auth_distinct_norm_rtt_map.png}
+    \includegraphics{images/dns/analysis_no_auth_agg/rtt_normalized/no_auth_distinct_norm_rtt_map.png}
     \caption{DNS Normalized RTT Indistinguishable States Map}
     \label{fig:dns_normalized_rtt_indistinguishable_states_map}
 \end{figure}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{images/dns/analysis_no_auth_agg/rtt_normalized/no_auth_distinct_norm_rtt_map_condensed.png}
+    \includegraphics{images/dns/analysis_no_auth_agg/rtt_normalized/no_auth_distinct_norm_rtt_map_condensed.png}
     \caption{DNS Normalized RTT Indistinguishable States Map Condensed Colors}
     \label{fig:dns_normalized_rtt_indistinguishable_states_map_condensed_colors}
 \end{figure}
@@ -242,16 +242,16 @@ As with the previous aggregation method, we began evaluating this approach by us
 
 \begin{figure}[H]
     \centering
-    \includesvg[width=.49\textwidth]{images/dns/analysis_auth_agg/rtt/unweighted/analysis_auth_agg_graph_rtt_un.svg}
-    \includesvg[width=.49\textwidth]{images/dns/analysis_auth_agg/rtt/population/analysis_auth_agg_graph_rtt_pop.svg}
+    \includesvg{images/dns/analysis_auth_agg/rtt/unweighted/analysis_auth_agg_graph_rtt_un.svg}
+    \includesvg{images/dns/analysis_auth_agg/rtt/population/analysis_auth_agg_graph_rtt_pop.svg}
     \caption{Unweighted and Population Weighted (True RTT)}
     \label{fig:dns_auth_agg_s2s_true_rtt_graphs}
 \end{figure}
 
 \begin{figure}[H]
     \centering
-    \includesvg[width=.49\textwidth]{images/dns/analysis_auth_agg/rtt_normalized/unweighted/analysis_auth_agg_graph_norm_rtt_un.svg}
-    \includesvg[width=.49\textwidth]{images/dns/analysis_auth_agg/rtt_normalized/population/analysis_auth_agg_graph_norm_rtt_pop.svg}
+    \includesvg{images/dns/analysis_auth_agg/rtt_normalized/unweighted/analysis_auth_agg_graph_norm_rtt_un.svg}
+    \includesvg{images/dns/analysis_auth_agg/rtt_normalized/population/analysis_auth_agg_graph_norm_rtt_pop.svg}
     \caption{Unweighted and Population Weighted (Normalized RTT)}
     \label{fig:dns_auth_agg_s2s_norm_rtt_graphs}
 \end{figure}
@@ -266,6 +266,8 @@ Perhaps most notable is that for the normalized \rtt data weighted by population
 
 And again, Wyoming ranked highly in all tables - its worst rank is \#8 for unweighted normalized \rtt. Alaska and Hawaii rank low in the true \rtt metrics but shoot to the top for normalized.
 
+\Cref{fig:dns_auth_agg_num_better_map_rtt_un}, \cref{fig:dns_auth_agg_num_better_map_rtt_pop}, \cref{fig:dns_auth_agg_num_better_map_norm_rtt_un}, and \cref{fig:dns_auth_agg_num_better_map_norm_rtt_pop}, show maps of the results in \cref{tab:dns_auth_agg_better_than}. In \cref{fig:dns_auth_agg_num_better_map_rtt_un}, which shows the true \rtt unweighted map, East Coast states, and to a lesser degree Midwestern states, perform prominently better, with Colorado and Wyoming as the primary exceptions. When weights are applied, as shown in \cref{fig:dns_auth_agg_num_better_map_rtt_pop}, the only states that remain clearly above the rest are a handful of East Coast states and Wyoming.
+
 \begin{figure}
     \centering
     \includegraphics{images/dns/analysis_auth_agg/rtt/unweighted/num_better_than_map_rtt_un.png}
@@ -279,6 +281,8 @@ And again, Wyoming ranked highly in all tables - its worst rank is \#8 for unwei
     \caption{DNS True RTT Population Weighted "Better Than" Map}
     \label{fig:dns_auth_agg_num_better_map_rtt_pop}
 \end{figure}
+
+On the other hand, the normalized and unweighted map, \cref{fig:dns_auth_agg_num_better_map_norm_rtt_un} show Western states performing far better than the rest of the country, although some on the East Coast do fairly well. However, much of that performance is lost when weighted by population in \cref{fig:dns_auth_agg_num_better_map_norm_rtt_pop}, where Western states are far more muted. One possible explanation for this is that while the normalized metric removes the distance barrier for the West, these states are also a great distance from the denser East Coast.
 
 \begin{figure}
     \centering
@@ -295,6 +299,6 @@ And again, Wyoming ranked highly in all tables - its worst rank is \#8 for unwei
 \end{figure}
 
 
+\section{Conclusions}
 
-
-\section{DNS Conclusions}
+One of the general conclusions that we can draw from the \dns cache manipulation method is that western states fair better when the data is normalized by distance, while states on the East Coast are better with the true \rtt metrics. This makes intuitive sense: the Eastern \us has a higher population density than the west, as well as a higher density of \dns servers. By simple proximity it the East coast is more connected to more of the \us. When you take out that factor, the West coast shines, indicating higher overall quality of internet connectivity.

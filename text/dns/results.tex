@@ -1,22 +1,21 @@
 \section{Collection Results}\label{sec:dns_results} % TODO Better section name?
 
-After extensive testing of the scripts and tweaking parameters, we ran several data collection batches, the results of which will be summarized in this chapter.
+Using the implementation outlined in the previous section, we ran four batches of data collection. This section provides an overview of the results of that collection, including issues we encountered and potential future mitigations for these issues.
 
 \subsection{Server Reliability Filtering}
 
 After filtering authoritative and recursive \dns servers for testing reliability (max coefficient of variation in repeated tests = 0.75), we were left with 387 authoritative servers across 50 states and the District of Columbia and 654 recursive servers across 49 states and the District of Columbia. We could not locate an open recursive \dns server, even unreliable, in the state of Rhode Island. \Cref{fig:dns_cache_manipulation_map_of_authoritative_servers} and \cref{fig:dns_cache_manipulation_map_of_recursive_servers} show the locations of the final server lists for authoritative servers and recursive servers respectively.
 
-\todo{Replace with better maps}
-\begin{figure}[H]
+\begin{figure}[h]
     \centering
-    \includegraphics[width=\textwidth]{dns/server_locations/map_authoritative_servers.png}
+    \includegraphics{images/dns/server_locations/auth_server_locations.png}
     \caption{Map of authoritative DNS servers}
     \label{fig:dns_cache_manipulation_map_of_authoritative_servers}
 \end{figure}
 
-\begin{figure}[H]
+\begin{figure}[h]
     \centering
-    \includegraphics[width=\textwidth]{dns/server_locations/map_recursive_servers.png}
+    \includegraphics{images/dns/server_locations/rec_server_locations.png}
     \caption{Map of recursive DNS servers}
     \label{fig:dns_cache_manipulation_map_of_recursive_servers}
 \end{figure}

@@ -2,8 +2,15 @@
 
 We chose three methods for measuring internet connectivity as described in \cref{sec:connectivity_defs}: mass traceroute data analysis, crowd-sourced "site ping" data, and \dns cache manipulation. These methods were pursued in parallel in hopes that by the end of our project, their results could be compared.
 
-\paragraph{Traceroute Analysis} \todo{Rename this section?} Two different organizations, \ripe (through its Atlas project) and \caida have large, distributed networks of devices that run traceroutes to most every part of the internet around the clock. This data is publicly available for download, and totals in tens of terabytes of data. Analysis of the data can reveal useful information about connectivity and networks in the \us.
 
-\paragraph{"Site ping"} The "site ping" method is a web-based, crowd-sourced approach that involves a user's web browser attempting to download a very small asset from one of the top 50 websites (as measured by Alexa \cite{Tachalova2017}) \todo{Fix citation?} and measure how long it takes. This method allows us to estimate how long it takes for a user to interact with a popular website, another measure of internet connectivity.
+\paragraph{Traceroute Analysis} Two different organizations, \ripe (through its Atlas project) and \caida have large, distributed networks of devices that run traceroutes to every part of the internet around the clock. This data is publicly available for download, and totals in tens of terabytes of data. Analysis of the data can reveal useful information about connectivity and networks in the \us usings metrics like those described in \cref{sec:definition_rtt_to_everywhere}.
 
-\paragraph{\dns Cache Manipulation} The \dns cache manipulation method is a continuation from the prior \mqp. It uses a set of geographically diverse recursive and authoritative \dns servers. By measuring latency to the recursive \dns server and then forcing it to go to a specific authoritative server, we can measure the \rtt from the location of the recursive server to the location of the authoritative server.
+Data collection and analysis of this method is described in \cref{sec:caida}.
+
+\paragraph{"Site Ping"} The "site ping" method is a web-based, crowd-sourced approach that involves a user's web browser attempting to download a very small asset from popular websites and measuring how long it takes. This method allows us to estimate how long it takes for a user to interact with a popular website, a measure of internet connectivity from \cref{sec:definition_rtt_site_ping}.
+
+This method is detailed in \cref{sec:web-ping}.
+
+\paragraph{\DNS Cache Manipulation} The \dns cache manipulation method is a continuation from the prior \mqp \cite{Fakult2019}. It uses a set of geographically diverse recursive and authoritative \dns servers. By measuring latency to the recursive \dns server and then forcing it to go to a specific authoritative server, we can measure the \rtt from the location of the recursive server to the location of the authoritative server. 
+
+This method is explored in more detail in \cref{sec:dns}.
