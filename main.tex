@@ -1,4 +1,4 @@
-\documentclass[12pt,oneside,letterpaper]{memoir}
+\documentclass[12pt,oneside,letterpaper,hyphens]{memoir}
 \usepackage[style=ieee,citestyle=numeric-comp,sorting=nty,backend=biber]{biblatex}
 \usepackage{todonotes}                                      % Temp
 
@@ -36,14 +36,14 @@
     
     % Table of contents, list of figures
     \pagenumbering{roman}
-    \listoftodos\newpage
+    % \listoftodos\newpage
     \tableofcontents\newpage
     \listoffigures\newpage
     \listofcodesnippets\newpage
     \listoftables\newpage
     
     % Switch to arabic page numbering, start headers, and one half spacing.
-    \pagenumbering{arabic}
+    % \pagenumbering{arabic}
     \pagestyle{headings}
     \mainmatter
     
@@ -84,7 +84,6 @@
     \newpage
     \acresetall
     \chapter{RTT to Everywhere: Traceroute Analysis}\label{sec:caida}
-    \todo{Add intro to CAIDA about connection defs}
     \input{text/caida/intro}
     \input{text/caida/design}
     \input{text/caida/implementation}
@@ -121,9 +120,9 @@
     \newpage
     \chapter{Conclusion}\label{sec:conclusion}
     \input{text/conclusion}
-    
-    % TODO Make sure appendix formatting works correctly
+
     \newpage
+    % \mainmatter % ... turn on "numbering" again
     \begin{appendices}
         \crefalias{chapter}{appsec}
         \input{text/appendices/code}
@@ -137,16 +136,11 @@
     
     \backmatter
     
-    % It's simpler to disable automatic sectioning for the glossaries and references than it is to fix a bug
-    % in table-of-authorship handling. I'm so, so sorry.
-    \let\endsection\chapter
-    \renewcommand{\section}[2]{}%
-    
     % List of acronyms
-    \footnotesize
-    \newpage
     % See https://www.dickimaw-books.com/gallery/glossaries-styles/ for styles
     % \setglossarystyle{mcolindex} 
+    \newpage
+    \footnotesize
     \setlength{\glspagelistwidth}{0.4\textwidth}
     \setglossarystyle{long3colheader}
     \printglossary[type=\acronymtype,]
@@ -160,4 +154,5 @@
     % Bibliography, automagically managed in IEEE style.
     \newpage
     \printbibliography
+    
 \end{document}

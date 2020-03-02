@@ -8,12 +8,14 @@ As there are 51 charts total only a few are listed here, intended to provide the
 
 \paragraph{Site ping is the most extreme} Across all \kde charts for all graphs, data from traceroutes and \dns cache manipulation tend to agree with each other (although spread differs). However, site ping consistently reports values very near the best possible value on these normalized axes, as demonstrated in \cref{fig:comparative_tn_dist}. The peak for traceroute data (referred to as just \caida on the charts) is sharper than \dns but very close to its median value. In comparison, the peak for site ping is incredibly sharp and narrow, and focused over the 0.95-1.0 range.
 
-\begin{figure}[h]
+% \begin{figure}[h]
+\begin{wrapfigure}[16]{R}{0.55\textwidth}
     \centering
-    \includegraphics{comparative/state_dists/TN_dist.png}
+    \includegraphics[width=0.55\textwidth]{comparative/state_dists/TN_dist.png}
     \caption{Tennessee data distributions}
     \label{fig:comparative_tn_dist}
-\end{figure}
+\end{wrapfigure}
+% \end{figure}
 
 This should not be taken as an indicator that site ping reports consistently good quality, but that there are less common instances where it reports \textit{exceptionally} poor. The fact that its distribution is centered over very high values is an artifact of normalizing by maximum value (and inverting) -- it means that somewhere to the far left, there's a small group of data points with very poor connectivities, just not enough to be seen on the \kde charts. Keep in mind, this is \textit{after} z-score filtering to eliminate outliers.
 
@@ -21,12 +23,14 @@ Put more concisely: the worst connectivity reported by site ping are dramaticall
 
 \paragraph{DNS data has higher spread than traceroute data} In all charts, \dns cache manipulation data shows a much larger spread than traceroute data does. For instance, in \cref{fig:comparative_il_dist} we see consistent centering around the same point (approximately 0.65-0.7) for \textit{all} measures\footnote{Interestingly we see a smaller peak for site ping data at that point too. This helps confirm the prior theory that there is a small subset of poor-connectivity site ping data points.}, with traceroute and site ping showing roughly the same spread, but with \dns much more spread out.
 
-\begin{figure}[hb]
+% \begin{figure}[hb]
+\begin{wrapfigure}[17]{L}{0.55\textwidth}
     \centering
-    \includegraphics{comparative/state_dists/IL_dist.png}
+    \includegraphics[width=0.55\textwidth]{comparative/state_dists/IL_dist.png}
     \caption{Illinois data distributions}
     \label{fig:comparative_il_dist}
-\end{figure}
+\end{wrapfigure}
+% \end{figure}
 
 There's a fairly simple explanation for this, having to do with the way data was collected. As described in \cref{sec:dns_design_collection_stages} the \dns method involves taking several measurements and performing subtraction operations between them to determine a final value. Since each measurement has a margin of error (e.g. $\pm5$ ms), and error adds up with each addition or subtraction operation, it's only natural to see a wide distribution of data.
 
@@ -36,11 +40,13 @@ The downside to this, of course, is that aggregate measurements -- like those di
 
 Although not all \kde charts show it as strongly, site ping distributions are far more likely to be strongly bimodal. In contrast, traceroute data is almost always unimodal, although with occasional ripples on the outer edges of the distribution. \Cref{fig:comparative_ri_dist} is a good example of this behavior.
 
-\begin{figure}
+% \begin{figure}
+\begin{wrapfigure}[14]{L}{0.55\textwidth}
     \centering
-    \includegraphics{comparative/state_dists/RI_dist.png}
+    \includegraphics[width=0.55\textwidth]{comparative/state_dists/RI_dist.png}
     \caption{Rhode Island data distributions}
     \label{fig:comparative_ri_dist}
-\end{figure}
+\end{wrapfigure}
+% \end{figure}
 
 The reasons for this are not entirely clear. \Cref{fig:caida_rtt_distribution}, the global \kde chart for all traceroute data in \cref{sec:caida_results}, shows an unusual, \textit{very} weakly bimodal distribution, but not an especially spread-out one. It may be that the occasional leftward peaks seen in site ping data area again due to the hypothesized greater-extremes from earlier before, but it's difficult to quantify.

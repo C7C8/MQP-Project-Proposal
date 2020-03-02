@@ -2,18 +2,18 @@
 
 Using the statistical and (in)distinguishability graph methods described in \cref{sec:stats_methods}, we were able to develop both graph visualizations of state distinguishability and a possible ranking of the states.
 
-\begin{figure}[h]
+\begin{figure}[htb]
     \centering
-    \includegraphics{caida/caida_network_invalid_comps.png}
+    \includegraphics[width=0.65\textwidth]{caida/caida_network_invalid_comps.png}
     \caption{Indistinguishability graph of traceroute data as aggregated by state}
     \label{fig:caida_network_invalid_comps}
 \end{figure}
 
 \Cref{fig:caida_network_invalid_comps} shows an indistinguishability graph of comparisons between the states (previously seen in \cref{sec:stats_methods}), where node colors correspond to communities and bold red lines correspond to bridges.\footnote{Bridges can be thought of as indicators of comparison quality; any state on the end of a bridge can be compared to all but one of the other states.} As noted earlier, this graph has no disjoint subgraphs, so ranking by clusters is not possible. \Cref{fig:caida_network_valid_comps} shows the corresponding distinguishability graph, which is much more connected, indicating this data is a good candidate for the topological sort method.
 
-\begin{figure}[h]
+\begin{figure}[htb]
     \centering
-    \includegraphics{caida/caida_network_valid_comps.png}
+    \includegraphics[width=0.65\textwidth]{caida/caida_network_valid_comps.png}
     \caption{Distinguishability graph of traceroute data as aggregated by state}
     \label{fig:caida_network_valid_comps}
 \end{figure}
@@ -22,9 +22,9 @@ When sorted we obtain a list of 49 states (including the District of Columbia; H
 
 \input{text/caida/tables/topological_state_ranks.tex}
 
-\begin{figure}[h]
+\begin{figure}[htb]
     \centering
-    \includegraphics{images/comparative/confidence_intervals/caida_confidence_interval.png}
+    \includegraphics[width=0.65\textwidth]{images/comparative/confidence_intervals/caida_confidence_interval.png}
     \caption{Traceroute confidence intervals for rankings; higher is better}
     \label{fig:caida_confidence_intervals}
 \end{figure}

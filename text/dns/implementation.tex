@@ -10,18 +10,20 @@ At its core, this method used the \texttt{dig} utility for making \dns requests 
 
 \begin{code}[h]
     \centering
+    \begin{minipage}{0.85\textwidth}
     \begin{minted}{bash}
 >dig [@<target server>] <target_domain> time=2 tries=1 +stats
     \end{minted}
+    \end{minipage}
     \caption{Template \texttt{dig} command}
     \label{fig:dig_template_command}
 \end{code}
 
 Notably, this command template does not include the \texttt{+noall} flag, unlike the prior project \cite{Fakult2019}. By omitting this flag in our version, we preserve the status and records actually produced by the recursive \dns server. \cref{fig:generic_dig_output} is an example of such output (modified slightly for formatting). This output includes the status flag \texttt{NXDOMAIN} which would be omitted with the \texttt{+notall} parameter. This status flag confirms that the random subdomain for a given domain does indeed not resolve to anything - this is important for the testing because if it did, the recursive server may have had a cache for that subdomain, invalidating the lookup time check. Additionally, this version of the command include the \texttt{ANSWER} and \texttt{AUTHORITY} sections (depending on the lookup) which aid in validating the type of server and the responses they give. These too would be left out with the \texttt{+noall} flag.
 
-\begin{code}[H]
+\begin{code}[htb]
     \centering
-    \begin{minted}{text}
+    \begin{minted}[linenos]{text}
 >dig @8.8.8.8 doesnotexist.wpi.edu +time=2 +tries=1 +stats
 
 ; <<>> DiG 9.11.3-1ubuntu1.11-Ubuntu <<>> @8.8.8.8 
@@ -51,18 +53,20 @@ netops.wpi.edu. 2010473291 3600 600 1209600 3600
     \label{fig:generic_dig_output}
 \end{code}
 
-Instead of running the \texttt{dig} tool directly via a bash script, we wrapped it in a Python script for ease of parsing. This allowed for easy, consistent usage across stages, which we also implemented using Python, as well as thorough testing to ensure expected behaviour. This utility itself utilized the \texttt{subprocess} module to make \texttt{dig} calls.
+Instead of running the \texttt{dig} tool directly via a bash script, we wrapped it in a Python script for ease of parsing. This utility itself utilized the \texttt{subprocess} module to make \texttt{dig} calls.
 
 As mentioned, each stage in this method was implemented using Python, separating into several scripts. These were all brought together with a bash script and the \texttt{parallel} utility \cite{Tange2011}, which allowed for parallelization, greatly reducing the time required for testing.
 
 \begin{code}[h]
     \centering
+    \begin{minipage}{0.75\textwidth}
     \begin{minted}{bash}
 >./parallel -a test_pairs.csv --colsep , --header '.*\n' 
     --progress --eta --jobs $JOB_COUNT 
     ./run_test.py {1} {2} {3} $TEST_TRY_COUNT $TIMEOUT 
     >> results/test_results.csv
     \end{minted}
+    \end{minipage}
     \caption{Sample \texttt{parallel} command}
     \label{fig:dns_sample_parallel_command}
 \end{code}
@@ -71,9 +75,7 @@ As mentioned, each stage in this method was implemented using Python, separating
 
 \subsection{Candidate DNS server lists}
 
-Initial lists of both types of \dns servers were provided to us by our advisor, Professor Craig Wills. After performing initial verification of these servers, we augmented the list by searching through a list of `.gov` domains filtered by the states we needed to fill in gaps for. In total, these lists included 535 authoritative servers and 1225 recursive servers (prior to final filtering).
-
-Note: the final list of recursive servers did not include any located in the state of Rhode Island despite an extensive search for one.
+Initial lists of both types of \dns servers were provided to us by our advisor, Professor Craig Wills. After performing initial verification of these servers, we augmented the list by searching through a list of `.gov` domains filtered by the states we needed to fill in gaps for. In total, these lists included 535 authoritative servers and 1225 recursive servers (prior to final filtering). Note that the final list of recursive servers did not include any located in the state of Rhode Island despite an extensive search for one.
 
 \subsection{Pre-processing Stages}
 
@@ -82,36 +84,27 @@ These stages ran prior to any actual data collection in an effort to streamline 
 \subsubsection{Confirmation of Server Status and Type}\label{sec:dns_impl_confirmation_of_status_and_type}
 
 The code in \cref{fig:auth_conf_snippet} is what we used to confirm that an expected authoritative server was indeed an authoritative server. The request for the domain tied to the server was directed directly to the its \ip address. If there was a result (i.e. \texttt{dig} output a valid result), the status of that result was \texttt{NOERROR} (the server was able to generate a response for the given domain) and the \texttt{AUTHORITY} section of the response was non-zero in length, the server was confirmed as a authoritative for the expected domain.
-\begin{code}[H]
+
+\begin{code}[htb]
 \centering
+\begin{minipage}{0.5\textwidth}
     \begin{minted}{python}
 result is not None 
     and result.status == "NOERROR" 
     and result.AUTHORITY > 0
     \end{minted}
+    \end{minipage}
     \caption{DNS Authoritative Confirmation Snippet}
     \label{fig:auth_conf_snippet}
 \end{code}
 
-The code use to confirm recursive servers, shown in \cref{fig:rec_conf_snippet}, was similar: there must be a result with an answer. However, it must also not have the phrase \texttt{Recursion requested but not available}. Additionally, it is allowed to have responses in the \texttt{ANSWER} section instead of just in the \texttt{AUTHORITY} section.
-
-\begin{code}[H]
-\centering
-    \begin{minted}{python}
-result is not None 
-    and result.status == "NOERROR" 
-    and not result.recursion_not_available 
-    and (result.ANSWER > 0 or result.AUTHORITY > 0)
-    \end{minted}
-    \caption{DNS Recursive Confirmation Snippet}
-    \label{fig:rec_conf_snippet}
-\end{code}
+The code use to confirm recursive servers, was similar: there must be a result with an answer. However, it must also not have the phrase \texttt{Recursion requested but not available}. Additionally, it is allowed to have responses in the \texttt{ANSWER} section instead of just in the \texttt{AUTHORITY} section.
 
 \subsubsection{Testing Reliability}
 
-\Cref{fig:auth_reliability_snippet} is part of the code (modified for formatting) used to verify the reliability of candidate authoritative servers. The code was passed a domain and \ip address for the authoritative server under tests. For a given number of trials, configured to 20 for every batch, the query time for a request made directly to the authoritative server for a domain we have already confirmed it was an authority for, was recorded (for a definition of a valid result, see \cref{sec:dns_impl_confirmation_of_status_and_type} and \cref{fig:auth_conf_snippet}). After all results were recorded, the authoritative server's \ip address was output if there were at least two successful results and the \cv was less than or equal to the threshold, configured to 0.5 for all tests.
+\Cref{fig:auth_reliability_snippet} is part of the code used to verify the reliability of candidate authoritative servers. The code was passed a domain and \ip address for the authoritative server under tests. For a given number of trials, configured to 20 for every batch, the query time for a request made directly to the authoritative server for a domain we have already confirmed it was an authority for, was recorded \footnote{For a definition of a valid result, see \cref{sec:dns_impl_confirmation_of_status_and_type} and \cref{fig:auth_conf_snippet}}. After all results were recorded, the authoritative server's \ip address was output if there were at least two successful results and the \cv was less than or equal to the threshold, configured to 0.5 for all tests.
 
-\begin{code}[h]
+\begin{code}[htb]
 \centering
     \begin{minted}[linenos]{python}
     for _ in range(trials):
@@ -121,33 +114,13 @@ result is not None
     if len(results) >= 2 and stdev(results)/mean(results) <= max_cov:
         print("{},{}".format(target_ip, generate_statistics(results)))
     \end{minted}
-    \caption{Authoritative Server Reliability Snippet}
+    \caption{Authoritative Server Reliability Snippet (modified for formatting)}
     \label{fig:auth_reliability_snippet}
 \end{code}
 
-Similarly, \cref{fig:rec_reliablility_snippet} shows a snippet for measuring the reliability of a candidate recursive server. A domain for testing (\texttt{cnn.com} for all runs) and a recursive server \ip address were passed in. First, the cache is primed to ensure the domain is cached in the server and then the query time for requesting that same domain from the server is recorded for a given number of trials (again, configured to 20 for each batch). Finally, if there were at least two results and the \cv met the threshold (0.5 for all testss), the domain was output as reliable. This is essentially making repeated latency measurements and ensuring that the results are consistent.
-
-\begin{code}[H]
-\centering
-    \begin{minted}{python}
-    run_dig(domain=domain, target_server=recursive_ip)
-    for _ in range(trials):
-        result = run_dig(domain=domain, target_server=recursive_ip)
-
-        if <result is valid>:
-            results.append(result.query_time)
-    if len(results) >= 2 and stdev(results)/mean(results) <= max_cov:
-        print("{},{}".format(recursive_ip, generate_statistics(results)))
-    \end{minted}
-    \caption{Recursive Server Reliability Snippet}
-    \label{fig:rec_reliablility_snippet}
-\end{code}
+Similarly, the code for testing the reliability of an authoritative server is similar. A domain for testing (\texttt{cnn.com} for all runs) and a recursive server \ip address were passed in. First, the cache is primed to ensure the domain is cached in the server and then the query time for requesting that same domain from the server is recorded for a given number of trials (again, configured to 20 for each batch). Finally, if there were at least two results and the \cv met the threshold (0.5 for all tests), the domain was output as reliable. This is essentially making repeated latency measurements and ensuring that the results are consistent.
 
 Note that both checks also output other statistics alongside the servers. These included the measurement mean, median, standard deviation, and variance. This gave us the option to do further analysis on server reliability, which we opted not to pursue.
-
-\subsubsection{IP Geolocation}
-
-To determine the physical location of the \dns servers, we used MaxMind, which provided coordinates and the server's state.
 
 \subsection{Data Collection Stages}
 
@@ -163,7 +136,7 @@ Priming the \dns cache was performed by making a single \dns query to \texttt{re
 
 \begin{code}[h]
 \centering
-\begin{minipage}{0.66\textwidth}
+\begin{minipage}{0.60\textwidth}
     \begin{minted}{python}
 [run_dig(domain=authoritative_domain, 
         target_server=recursive_ip, 

@@ -1,4 +1,4 @@
-\section{Analysis}\label{sec:dns_analysis} % TODO Better section name?
+\section{Analysis}\label{sec:dns_analysis}
 
 With the data we collected, we conducted two major approaches at analysis. The first approach treated every measurement for a recursive server in a give state as equal and gave each state a score based on these measurements aggregated together. The second method first aggregated measurements within one state based on the authoritative state the measurement was made with, which also gave us the opportunity to weight connections to states differently.
 
@@ -11,10 +11,10 @@ Additionally, calculating the speed of the connection, not just the total \rtt, 
 
 \Cref{fig:dns_analytics_median_dist} shows the distribution of the median true \rtt values for all locations. It shows that the data takes on a bimodal distribution with peaks around 45ms and 68ms with a heavy bias towards the former.
 
-\begin{figure}[h]
+\begin{figure}[htb]
     \centering
-    \includegraphics{images/dns/dist_raw_data/dns_rtt_median_distribution.png}
-    \caption{DNS RTT Median Distribution}
+    \includegraphics[width=0.75\textwidth]{images/dns/dist_raw_data/dns_rtt_median_distribution.png}
+    \caption{DNS RTT median distribution}
     \label{fig:dns_analytics_median_dist}
 \end{figure}
 
@@ -22,10 +22,10 @@ Additionally, calculating the speed of the connection, not just the total \rtt, 
 
 After normalizing by distance, the bimodality all but disappears, as \cref{fig:dns_analytics_norm_median_dist} shows. In this chart, the distribution pears around 30km/ms.
 
-\begin{figure}[h]
+\begin{figure}[htb]
     \centering
-    \includegraphics{images/dns/dist_raw_data/dns_norm_rtt_median_distribution.png}
-    \caption{DNS Normalized RTT Median Distribution}
+    \includegraphics[width=0.75\textwidth]{images/dns/dist_raw_data/dns_norm_rtt_median_distribution.png}
+    \caption{DNS normalized RTT median distribution}
     \label{fig:dns_analytics_norm_median_dist}
 \end{figure}
 
@@ -33,32 +33,29 @@ After normalizing by distance, the bimodality all but disappears, as \cref{fig:d
 
 \Cref{fig:dns_true_rtt_heatmap} shows a heatmap based on true \dns \rtt measurements. This map shows that a significant portion of Western US has poor \dns \rtts. In contrast to the West, a majority of the the East Coast performs better. As we discuss later, this is likely due to the higher quantity of authoritative servers present in the East. Another highlight is that the South is rather inconsistent: Mississippi is probably the most homogeneous in being bad, but Alabama, Georgia, Louisiana, Tennessee, Missouri, and even eastern Texas are rather "splotchy", for lack of a better term.
 
-\begin{figure}[h]
+\begin{figure}[htb]
     \centering
-    \includegraphics{images/dns/heatmaps/dns_rtt_idw.jpg}
-    \caption{DNS True RTT Heatmap}
+    \includegraphics[width=0.75\textwidth]{images/dns/heatmaps/dns_rtt_idw.png}
+    \caption{DNS true RTT heatmap}
     \label{fig:dns_true_rtt_heatmap}
 \end{figure}
 
 \Cref{fig:dns_normalized_rtt_heatmap} shows a similar heatmap, but for distance normalized \dns \rtt data. In stark contrast to the prior map, the West coast displays significantly better performance - likely due to the distance to eastern authoritative servers being cancelled out. The Midwest and mid-Atlantic regions fare much worse, while the South is far more consistent in its poor results. The two main regions that remain consistent between the two maps are the North East and Colorado/Wyoming.
 
-\begin{figure}[h]
+\begin{figure}[htb]
     \centering
-    \includegraphics{images/dns/heatmaps/dns_speed_of_light_idw.jpg}
-    \caption{DNS Normalized RTT Heatmap}
+    \includegraphics[width=0.75\textwidth]{images/dns/heatmaps/dns_speed_of_light_idw.png}
+    \caption{DNS normalized RTT heatmap}
     \label{fig:dns_normalized_rtt_heatmap}
 \end{figure}
 
 \subsection{Aggregation by Server Pairs}
 Since there we multiple data points for each recursive-authoritative server pair, the first step in aggregating the data was to aggregate by these server pairs. To do this, we removed points within each pair that had a z-score greater than a given threshold \texttt{z} as these were considered outliers within their pairs. We then computed the \cv of each pair with the remaining values and discarded any pairs with a result greater than a given threshold \texttt{v} - these pairs did not have consistent measurements and were considered unreliable.
 
-\begin{table}[h]
+\begin{table}[htb]
     \centering
-    \begin{tabular}{ |l|l|l|  }
-     \hline
-     \multicolumn{3}{|c|}{DNS Z-score filtering} \\
-     \hline
-      & True \rtt records dropped & Normalized \rtt records dropped \\
+    \begin{tabular}{ l|l|l  }
+      & \textbf{True \rtt records dropped} & \textbf{Normalized \rtt records dropped} \\
      \hline
       \texttt{z=3} & 92,553/5,188,421 (1.8\%) & 63,008/5,188,421 (1.2\%) \\
       \texttt{z=2} & 269,651/5,188,421 (5.2\%) & 237,353‬/5,188,421 (4.6\%) \\
@@ -69,64 +66,38 @@ Since there we multiple data points for each recursive-authoritative server pair
     \label{tab:dns_z_filtering}
 \end{table}
 
-\todo{Expand}
-We chose to proceed with \texttt{z=2}.
-
-\begin{table}[H]
+\begin{table}[htb]
     \centering
-    \begin{tabular}{ |p{1.6cm}|p{4cm}|p{4cm}|p{4cm}| }
-        \hline
-        \multicolumn{4}{|c|}{CV Filtering - Pairs Dropped} \\
-        \hline
+    \begin{tabular}{p{1.6cm}|p{4cm}|p{4cm}|p{4cm}}
          & \texttt{z=3} (\texttt{n=381,333}) & \texttt{z=2} (\texttt{n=381,333}) & \texttt{z=1} (\texttt{n=381,333}) \\
         \hline
         \texttt{v=0.05} & 193,099 (50.6\%)  & 167,618 (44.0\%) & ‭92,799 (24.3\%) \\
         \texttt{v=0.10} & 111,294 (29.2\%) & 92,023 (24.1\%) & 40,889 (10.7\%)‬\\
         \texttt{v=0.20} & 52,239 (13.7\%) &  40,353 (10.6\%) & 13,262 (3.5\%)\\
         \texttt{v=0.50} & 9,330 (2.4\%) &  6,333 (1.7\%) & 1,809 (0.5\%)\\
-        \texttt{v=1.00} & 1,741 (0.5\%) &    766 (0.2\%) & 176 (~0.0\%) \\
+        \texttt{v=1.00} & 1,741 (0.5\%) &    766 (0.2\%) & 176 (\textapprox0.0\%) \\
         \hline
     \end{tabular}
-    \caption{True RTT DNS Pair CV Filtering}
+    \caption{True RTT DNS pair CV filtering}
     \label{tab:dns_unnorm_cv_filtering}
 \end{table}
 
-\begin{table}[H]
+\begin{table}[htb]
     \centering
-    \begin{tabular}{ |p{1.6cm}|p{4cm}|p{4cm}|p{4cm}| }
-        \hline
-        \multicolumn{4}{|c|}{CV Filtering - Pairs Dropped} \\
-        \hline
+    \begin{tabular}{p{1.6cm}|p{4cm}|p{4cm}|p{4cm}}
          & \texttt{z=3} (\texttt{n=382,963}) & \texttt{z=2} (\texttt{n=382,963}) & \texttt{z=1} (\texttt{n=382,963}) \\
         \hline
         \texttt{v=0.05} & 192,522 (50.3\%) & 166,514 (43.5\%) & 87,383 (22.8\%) \\
         \texttt{v=0.10} & 109,493 (28.6\%) & 89,906 (23.5\%) & 35,553 (9.3\%) \\
         \texttt{v=0.20} & 48,414 (12.6\%) & 37,623 (9.8\%) & 10,579 (2.8\%) \\
         \texttt{v=0.50} & 6,304 (1.6\%) & 4,570 (1.2\%) & 1,314 (0.3\%) \\
-        \texttt{v=1.00} & 1,038 (0.3\%) &    415 (0.1\%) & 126 (~0.0\%) \\  
-        \hline
+        \texttt{v=1.00} & 1,038 (0.3\%) &    415 (0.1\%) & 126 (\textapprox0.0\%) \\  
     \end{tabular}
-    \caption{Normalized RTT DNS Pair CV Filtering}
+    \caption{Normalized RTT DNS pair CV filtering}
     \label{tab:dns_norm_cv_filtering}
 \end{table}
 
-We chose to proceed with \texttt{v=1.0}, which left the vast majority of pairs in the dataset excluding only the most inconsistent measurements. The reasoning behind this is that we aren't just interested in stable connections - so we left potentially unstable or inconsistent measurements in the dataset.
-
-\subsubsection{Data Characteristics}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics{images/dns/analysis_no_auth_agg/rtt/all_pairs_histogram.png}
-    \caption{DNS True RTT Pair Histogram}
-    \label{fig:dns_true_rtt_pair_histogram}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics{images/dns/analysis_no_auth_agg/rtt/all_pairs_histogram.png}
-    \caption{DNS Normalized RTT Pair Histogram}
-    \label{fig:dns_norm_rtt_pair_histogram}
-\end{figure}
+We chose to proceed with \texttt{v=1.0} and \texttt{z=2}, which left the vast majority of pairs in the data set excluding only the most inconsistent measurements. The reasoning behind this is that we aren't just interested in stable connections - so we left potentially unstable or inconsistent measurements in the data set.
 
 \subsection{Aggregating Pairs by Recursive State}
 
@@ -138,83 +109,68 @@ One option to further aggregate the pair data is to group it by the location of 
 
 \input{text/dns/tables/only_recursive_initial_rankings.tex}
 
-Notably, \cref{tab:dns_only_recursive_initial_state_rankings} indicates that Wyoming ranks in the top five for both rankings. ...
-
-Also, the rankings show that while Hawaii and Alaska rank near or at the bottom for true \rtt, both states appear near the top of the normalized ranking. This shows that while the some states, Alaska and Hawaii in particular, may be inherently unconnected from the rest of the United States, the quality of their connection could be relatively high and merely dominated by sheer distances.
+Notably, \cref{tab:dns_only_recursive_initial_state_rankings} indicates that Wyoming ranks in the top five for both rankings. No other state appears performs so consistently well. Additionally, the rankings show that while Hawaii and Alaska rank near or at the bottom for true \rtt, both states appear near the top of the normalized ranking. This shows that while the some states, Alaska and Hawaii in particular, may be inherently unconnected from the rest of the United States, the quality of their connection could be relatively high and merely dominated by sheer distances.
 
 \subsubsection{Evaluating State Rankings}
 
-To determine the validity of the rankings proposed above we used the Kruskal-Wallis test to determine whether there was evidence that datasets for different states came from different distributions. If we cannot reject the null hypothesis that they are from the same distribution, we cannot rank them in distinct positions. After running Kurskals between the datasets for each of the 49 states + DC, we used a p value threshold of 0.05 to determine if we could differentiate two states from each other. 
+To determine the validity of the rankings proposed above we used the Kruskal-Wallis test to determine whether there was evidence that datasets for different states came from different distributions. If we cannot reject the null hypothesis that they are from the same distribution, we cannot rank them in distinct positions. After running Kurskals between the datasets for each of the 49 states and DC, we used a p value threshold of 0.05 to determine if we could differentiate two states from each other. 
 
-\begin{figure}[H]
+% \begin{figure}[h]
+\begin{wrapfigure}[28]{L}{0.65\textwidth}
     \centering
-    \includesvg{images/dns/analysis_no_auth_agg/rtt/no_auth_agg_true_rtt_graph.svg}
-    \caption{DNS True RTT Indistinguishable States Graph}
+    \includesvg[width=0.65\textwidth]{images/dns/analysis_no_auth_agg/rtt/no_auth_agg_true_rtt_graph.svg}
+    \caption{DNS true RTT indistinguishability graph}
     \label{fig:dns_true_rtt_indistinguishable_states_graph}
-\end{figure}
+\end{wrapfigure}
+% \end{figure}
 
-For true \rtt, \cref{fig:dns_true_rtt_indistinguishable_states_graph} shows a graph with a node for each of the 49 states + DC and a link between each pair of nodes where the Kruskal-Wallis test between the two yielded a p value greater than 0.05, indicating that there is no evidence of a difference between the two states. Each the y-position for each state in the graph is dictated by its ranking in the the initial ranking table (ties were broken up arbitrarily for readability and the x-position is arbitrary). 
+For true \rtt, \cref{fig:dns_true_rtt_indistinguishable_states_graph} shows a graph with a node for each of the 49 states and DC and a link between each pair of nodes where the Kruskal-Wallis test between the two yielded a p value greater than 0.05, indicating that there is no evidence of a difference between the two states. Each the y-position for each state in the graph is dictated by its ranking in the the initial ranking table (ties were broken up arbitrarily for readability and the x-position is arbitrary). 
 
-Note that the top seven states in the true \rtt ranking in \cref{tab:dns_only_recursive_initial_state_rankings}, WY, VA, DC, WV, NY, NJ, and MD, form a distinct sub graph. Similarly, the states ranked \#9-\#12, IL, CO, NH, and MI, form another distinct sub graph. This indicates that while the states that make up these two groups cannot be distinguished from one another (i.e. there is no evidence that Wyoming is better than Virginia), we can state the the entirety of the first group is better than the entirety of the second group.
+Note that the top seven states in the true \rtt ranking in \cref{tab:dns_only_recursive_initial_state_rankings}, WY, VA, DC, WV, NY, NJ, and MD, form a distinct sub graph. Similarly, the states ranked \#9-12, IL, CO, NH, and MI, form another distinct sub graph. This indicates that while the states that make up these two groups cannot be distinguished from one another (i.e. there is no evidence that Wyoming is better than Virginia), we can state the the entirety of the first group is better than the entirety of the second group.
 
 Similar to the groups at the top of the ranking, there are distinct groups at the bottom. Kruskals identified Alaska, \#50, as entirely different. However, the six preceding states ranked \#43(t) to \#49, HI, MS, OR, WA, ME, and MT, are a distinct sub graph, as are the three states preceding them, ND, NM, and HI. Note that in the initial ranking, New Mexico and Hawaii are tied for \#43, but are identified as distinct using Kruskals.
 
 Also notable is Louisiana: the state ranks \#22(t), but is labeled as indistinguishable from Arizona, \#34(t), and Nevada, \#34(t).
 
-\begin{figure}[H]
+\begin{figure}[htb]
     \centering
-    \includegraphics{images/dns/analysis_no_auth_agg/rtt/no_auth_distinct_rtt_map.png}
-    \caption{DNS True RTT State Groupings}
+    \includegraphics[width=0.75\textwidth]{images/dns/analysis_no_auth_agg/rtt/no_auth_distinct_rtt_map.png}
+    \caption{DNS true RTT state groupings}
     \label{fig:dns_true_rtt_indistinguishable_states_map}
 \end{figure}
 
-\Cref{fig:dns_true_rtt_indistinguishable_states_map} maps the each distinct sub graph to a separate color (graphs are numbered by in the order of their highest ranked consituent state). \Cref{fig:dns_true_rtt_indistinguishable_states_map_condensed_colors} is similar, but utilizes condensed colors in which similarly ranked groups are colored the same. These highlight some patterns and some oddities. For example, seven of the top eight states, represented by groups 1 and 2, are located on the East Coast, with Wyoming being the odd state out. The Midwest and the western Mountain region are dominated by states in groups 7 and 8. The Great Lakes region consists primarily of states in groups 3 and four. The West Coast and Hawaii did not fair as well as the East Coast with California, Oregon, and Washington (and Hawaii) in groups 9 and 10. Meanwhile, the South is a bit of a "hodge-podge" of groups, indicating a lack of consistency there.
+\Cref{fig:dns_true_rtt_indistinguishable_states_map} maps the each distinct sub graph to a separate color (graphs are numbered by in the order of their highest ranked consituent state). This highlights some patterns and some oddities. For example, seven of the top eight states, represented by groups 1 and 2, are located on the East Coast, with Wyoming being the odd state out. The Midwest and the western Mountain region are dominated by states in groups 7 and 8. The Great Lakes region consists primarily of states in groups 3 and four. The West Coast and Hawaii did not fair as well as the East Coast with California, Oregon, and Washington (and Hawaii) in groups 9 and 10. Meanwhile, the South is a bit of a "hodge-podge" of groups, indicating a lack of consistency there.
 
-
-\begin{figure}[H]
+\begin{figure}[htb]
     \centering
-    \includegraphics{images/dns/analysis_no_auth_agg/rtt/no_auth_agg_rtt_confidence.jpg}
-    \caption{DNS True RTT Confidence Intervals}
+    \includegraphics[width=0.75\textwidth]{images/dns/analysis_no_auth_agg/rtt/no_auth_agg_rtt_confidence.png}
+    \caption{DNS true RTT confidence intervals}
     \label{fig:dns_true_rtt_confidence_intervals}
 \end{figure}
 
 Finally, for true \rtt, \cref{fig:dns_true_rtt_confidence_intervals} shows bootstrapped confidence intervals for each state. With a few exceptions, bounds are fairly tight, indicating high confidence that the ranking listed in \cref{tab:dns_only_recursive_initial_state_rankings} is reliable. One of the notable exceptions is Wyoming, which has a much higher confidence interval than its neighbors in the "good" \rtt region. One possible cause for this may be the fact that Wyoming only had one recursive server in it. However, this was also the case for other servers that did not exhibit the behavior that Wyoming did.
 
-\begin{figure}[H]
-    \centering
-    \includegraphics{images/dns/analysis_no_auth_agg/rtt/no_auth_distinct_rtt_map_condensed.png}
-    \caption{DNS True RTT Indistinguishable States Map Condensed Colors}
-    \label{fig:dns_true_rtt_indistinguishable_states_map_condensed_colors}
-\end{figure}
-
 Similar to the graph for true \rtt, \cref{fig:dns_normalized_rtt_indistinguishable_states_graph} is a graph of states in the normalized \rtt ranking that are indistinguishable. This graph includes a much larger and messier middle group consisting of 27 states. Hawaii, ranked \#1 is an independent node, as is California at \#4, with Alaska and Wyoming forming a pair between these two. At the bottom, Mississippi is distinctly alone. The second largest distinct subgroup consists of 10 states spanning from \#5 to \#15, with Utah distinct from all of them, but ranked \#9.
 
-\begin{figure}[H]
+% \begin{figure}[htb]
+\begin{wrapfigure}[27]{R}{0.50\textwidth}
     \centering
-    \includesvg{images/dns/analysis_no_auth_agg/rtt_normalized/no_auth_agg_norm_rtt_graph.svg}
-    \caption{DNS Normalized RTT Indistinguishable States Graph}
+    \includesvg[width=0.50\textwidth]{images/dns/analysis_no_auth_agg/rtt_normalized/no_auth_agg_norm_rtt_graph.svg}
+    \caption{DNS normalized RTT indistinguishable states graph}
     \label{fig:dns_normalized_rtt_indistinguishable_states_graph}
-\end{figure}
+\end{wrapfigure}
+% \end{figure}
 
 Overall, \cref{fig:dns_normalized_rtt_indistinguishable_states_graph} shows that while there are more completely distinct states in the normalized rankings, the states in the middle of the pack are dominated by a single large cluster.
 
 Mapping the distinct sub graphs for normalized \dns \rtt shows a majority of the large, mid ranking sub graph is on the East Coast and in the Midwest, with some states in the Mountain region. The West Coast is comprised entirely of states in groups 3 and 4, which also contain some states in the North East.
 
-\begin{figure}[H]
+\begin{figure}[htb]
     \centering
-    \includegraphics{images/dns/analysis_no_auth_agg/rtt_normalized/no_auth_distinct_norm_rtt_map.png}
-    \caption{DNS Normalized RTT Indistinguishable States Map}
+    \includegraphics[width=0.75\textwidth]{images/dns/analysis_no_auth_agg/rtt_normalized/no_auth_distinct_norm_rtt_map.png}
+    \caption{Normalized RTT indistinguishability graph}
     \label{fig:dns_normalized_rtt_indistinguishable_states_map}
 \end{figure}
-
-\begin{figure}[H]
-    \centering
-    \includegraphics{images/dns/analysis_no_auth_agg/rtt_normalized/no_auth_distinct_norm_rtt_map_condensed.png}
-    \caption{DNS Normalized RTT Indistinguishable States Map Condensed Colors}
-    \label{fig:dns_normalized_rtt_indistinguishable_states_map_condensed_colors}
-\end{figure}
-
-
 
 \subsection{Aggregation by Authoritative State then Recursive State}
 
@@ -222,15 +178,15 @@ One shortcoming of aggregating pairs directly by the location of the recursive s
 
 Given the presence of authoritative servers in every state, this creates a list of 51 measurements for each state with a recursive server. For example, all measurements between a recursive server in California and an authoritative server in Massachusetts are aggregated into a single measurement (using median) for California. This is then done for every other state with measurements from California, giving California a 51 measurement dataset, and then repeated for each state with a recursive server. 
 
-To get a final value for a given state, each of these 51 measurements is averaged. Back to the example of California, this gives each state with measurements from California an equal weight in the final value for California. This is in essence like the US Senate: this measurement gives precedence to states with better connections to each other state.
+To get a final value for a given state, each of these 51 measurements is averaged. Back to the example of California, this gives each state with measurements from California an equal weight in the final value for California. 
 
 However, prior to averaging the 51 measurements for each state, we had the option of applying weights to the values. Again with the California example, we could apply a weight to the aggregated measurement between it and Massachusetts based on Massachusetts' population, \gdp, or other metric. For example, Massachusetts has a high population than Wyoming, so with a population based weighting scheme, the measurement to Massachusetts is valued higher than the measurement to Wyoming.
 
 We chose to proceed with unweighted and population weighted aggregations. Weighting by population gives higher value to connections with states that have greater populations. Essentially, this creates a proxy for how well connected people in one state are to all other people in the United States.
 
-\subsubsection{Initial State Rankings}
+\subsubsection{State Rankings}
 
-\Cref{tab:dns_auth_initial_state_rankings} shows rankings based on this aggregation method, unweighted and population weighted, for both true \dns \rtt and normalized \dns \rtt. There are some shared patterns with the previous aggregation rankings: Wyoming ranks highly in all four, Alaska and Hawaii are at the bottom in both true \rtt metrics but rise to top when looking at the normalized rankings. Under true \rtt, all weighted \rtt values are lower than the values at the same rank in the unweighted column. This indicates states with higher populations have at generally lower values than their counterparts, driving down the weighted metrics.
+\Cref{tab:dns_auth_initial_state_rankings} shows rankings based on this aggregation method, unweighted and population weighted, for both true \dns \rtt and normalized \dns \rtt. There are some shared patterns with the previous aggregation rankings: Wyoming ranks highly in all four, Alaska and Hawaii are at the bottom in both true \rtt metrics but rise to top when looking at the normalized rankings. Under true \rtt, all weighted \rtt values are lower than the values at the same rank in the unweighted column. This indicates states with higher populations have generally lower values than their counterparts, driving down the weighted metrics.
 
 \input{text/dns/tables/auth_aggregation_initial_rankings.tex}
 
@@ -240,65 +196,56 @@ As with the previous aggregation method, we began evaluating this approach by us
 
 \Cref{fig:dns_auth_agg_s2s_true_rtt_graphs} shows the results of this analysis for true \rtt, with the unweighted results on the left and the population weighted results on the right. \Cref{fig:dns_auth_agg_s2s_norm_rtt_graphs} does the same for the normalized data. All four show roughly the same thing: with this analysis method, there are very few completely distinct states (Hawaii in the normalized data and Alaska in the unweighted true \rtt data). Overall, the unweighted data for both true \rtt and normalized \rtt show lower inter-connectivity, indicating that states are more distinguishable from each other when the data is not weighted.
 
-\begin{figure}[H]
+\begin{figure}[htb]
     \centering
-    \includesvg{images/dns/analysis_auth_agg/rtt/unweighted/analysis_auth_agg_graph_rtt_un.svg}
-    \includesvg{images/dns/analysis_auth_agg/rtt/population/analysis_auth_agg_graph_rtt_pop.svg}
-    \caption{Unweighted and Population Weighted (True RTT)}
+    \includesvg[width=0.45\textwidth]{images/dns/analysis_auth_agg/rtt/unweighted/analysis_auth_agg_graph_rtt_un.svg}
+    \includesvg[width=0.45\textwidth]{images/dns/analysis_auth_agg/rtt/population/analysis_auth_agg_graph_rtt_pop.svg}
+    \caption{Unweighted and population weighted rank graphs (true RTT)}
     \label{fig:dns_auth_agg_s2s_true_rtt_graphs}
 \end{figure}
 
-\begin{figure}[H]
+\begin{figure}[h]
     \centering
-    \includesvg{images/dns/analysis_auth_agg/rtt_normalized/unweighted/analysis_auth_agg_graph_norm_rtt_un.svg}
-    \includesvg{images/dns/analysis_auth_agg/rtt_normalized/population/analysis_auth_agg_graph_norm_rtt_pop.svg}
-    \caption{Unweighted and Population Weighted (Normalized RTT)}
+    \includesvg[width=0.45\textwidth]{images/dns/analysis_auth_agg/rtt_normalized/unweighted/analysis_auth_agg_graph_norm_rtt_un.svg}
+    \includesvg[width=0.45\textwidth]{images/dns/analysis_auth_agg/rtt_normalized/population/analysis_auth_agg_graph_norm_rtt_pop.svg}
+    \caption{Unweighted and population weighted graphs (normalized RTT)}
     \label{fig:dns_auth_agg_s2s_norm_rtt_graphs}
 \end{figure}
 
 In short, these graphs show that the rankings provided in \cref{tab:dns_auth_initial_state_rankings} are likely highly unreliable.
 
-As a result, we continued by determining how many states each state is distinctly better than for each ranking. For example, if California is ranked above Wyoming and the p-value comparing the two is less than or equal to 0.05, California is considered to be distinctly better than Wyoming. On the other hand, if California is also ranked above Massachusetts but the p-value between the two is greater than 0.05, California does not gain credit for being distinctly higher than Massachusetts. States initially ranked above California would not be considered. \Cref{tab:dns_auth_agg_better_than} show the results of this analysis.
+As a result, we continued by determining how many states each state is distinctly better than for each ranking. For example, if California is ranked above Wyoming and the p-value comparing the two is less than or equal to 0.05, California is considered to be distinctly better than Wyoming. On the other hand, if California is also ranked above Massachusetts but the p-value between the two is greater than 0.05, California does not gain credit for being distinctly higher than Massachusetts. States initially ranked above California would not be considered. \Cref{tab:dns_auth_agg_better_than} shows the results of this analysis.
 
 \input{text/dns/tables/auth_agg_better_than_table}
 
 Perhaps most notable is that for the normalized \rtt data weighted by population, over half of states were not distinctly better than a single other state. Overall, the unweighted methodologies fared better at distinguishing states at the top and bottom. 
 
-And again, Wyoming ranked highly in all tables - its worst rank is \#8 for unweighted normalized \rtt. Alaska and Hawaii rank low in the true \rtt metrics but shoot to the top for normalized.
+And again, Wyoming ranked highly in all tables - its worst rank is \#8 for unweighted normalized \rtt. Alaska and Hawaii rank low in the true \rtt metrics but are at the top for normalized.
 
-\Cref{fig:dns_auth_agg_num_better_map_rtt_un}, \cref{fig:dns_auth_agg_num_better_map_rtt_pop}, \cref{fig:dns_auth_agg_num_better_map_norm_rtt_un}, and \cref{fig:dns_auth_agg_num_better_map_norm_rtt_pop}, show maps of the results in \cref{tab:dns_auth_agg_better_than}. In \cref{fig:dns_auth_agg_num_better_map_rtt_un}, which shows the true \rtt unweighted map, East Coast states, and to a lesser degree Midwestern states, perform prominently better, with Colorado and Wyoming as the primary exceptions. When weights are applied, as shown in \cref{fig:dns_auth_agg_num_better_map_rtt_pop}, the only states that remain clearly above the rest are a handful of East Coast states and Wyoming.
+\Cref{fig:dns_auth_agg_num_better_map_rtt} and \cref{fig:dns_auth_agg_num_better_map_norm_rtt}, show maps of the results in \cref{tab:dns_auth_agg_better_than}, where states with darker green coloring are distinctly better than more states than states that are colored grey. In \cref{fig:dns_auth_agg_num_better_map_rtt}, which show the true \rtt unweighted and weighted maps, East Coast states, and to a lesser degree Midwestern states, perform prominently better, with Colorado and Wyoming as the primary exceptions. When weights are applied, the only states that remain clearly above the rest are a handful of East Coast states and Wyoming.
 
-\begin{figure}
+\begin{figure}[htb]
     \centering
-    \includegraphics{images/dns/analysis_auth_agg/rtt/unweighted/num_better_than_map_rtt_un.png}
-    \caption{DNS True RTT Unweighted "Better Than" Map}
-    \label{fig:dns_auth_agg_num_better_map_rtt_un}
+    \includegraphics[width=.6\textwidth]{images/dns/analysis_auth_agg/rtt/unweighted/num_better_than_map_rtt_un.png}\\
+    \includegraphics[width=.6\textwidth]{images/dns/analysis_auth_agg/rtt/population/num_better_than_map_rtt_pop.png}
+    \caption{DNS true RTT unweighted and population weighted ``better than'' map}
+    \label{fig:dns_auth_agg_num_better_map_rtt}
 \end{figure}
 
-\begin{figure}
+On the other hand, the normalized maps, \cref{fig:dns_auth_agg_num_better_map_norm_rtt} show Western states performing far better than the rest of the country, although some on the East Coast do fairly well. However, much of that performance is lost when weighted by population, where Western states are far more muted. One possible explanation for this is that while the normalized metric removes the distance barrier for the West, these states are also a great distance from the denser East Coast.
+
+\begin{figure}[htb]
     \centering
-    \includegraphics{images/dns/analysis_auth_agg/rtt/population/num_better_than_map_rtt_pop.png}
-    \caption{DNS True RTT Population Weighted "Better Than" Map}
-    \label{fig:dns_auth_agg_num_better_map_rtt_pop}
+    \includegraphics[width=0.6\textwidth]{images/dns/analysis_auth_agg/rtt_normalized/unweighted/num_better_than_map_norm_rtt_un.png}\\
+    \includegraphics[width=0.6\textwidth]{images/dns/analysis_auth_agg/rtt_normalized/population/num_better_than_map_norm_rtt_pop.png}
+    \caption{DNS normalized RTT unweighted  and population weighted ``better than'' map}
+    \label{fig:dns_auth_agg_num_better_map_norm_rtt}
 \end{figure}
 
-On the other hand, the normalized and unweighted map, \cref{fig:dns_auth_agg_num_better_map_norm_rtt_un} show Western states performing far better than the rest of the country, although some on the East Coast do fairly well. However, much of that performance is lost when weighted by population in \cref{fig:dns_auth_agg_num_better_map_norm_rtt_pop}, where Western states are far more muted. One possible explanation for this is that while the normalized metric removes the distance barrier for the West, these states are also a great distance from the denser East Coast.
+Overall, these maps show that there are few meaningful conclusions that we can draw from weighting states by population: when doing so, states are far too indistinguishable from each other. However, the unweighted maps show that even if we cannot draw conclusions about specific states when eliminating the implicit \dns weighting, we can show that, for true \rtt, the East Coast and the Midwest tend to perform better as a region, as does the West Coast for normalized \rtt.
 
-\begin{figure}
-    \centering
-    \includegraphics{images/dns/analysis_auth_agg/rtt_normalized/unweighted/num_better_than_map_norm_rtt_un.png}
-    \caption{DNS Normalized RTT Unweighted "Better Than" Map}
-    \label{fig:dns_auth_agg_num_better_map_norm_rtt_un}
-\end{figure}
-
-\begin{figure}
-    \centering
-    \includegraphics{images/dns/analysis_auth_agg/rtt_normalized/population/num_better_than_map_norm_rtt_pop.png}
-    \caption{DNS Normalized RTT Population Weighted "Better Than" Map}
-    \label{fig:dns_auth_agg_num_better_map_norm_rtt_pop}
-\end{figure}
-
+\FloatBarrier
 
 \section{Conclusions}
 
-One of the general conclusions that we can draw from the \dns cache manipulation method is that western states fair better when the data is normalized by distance, while states on the East Coast are better with the true \rtt metrics. This makes intuitive sense: the Eastern \us has a higher population density than the west, as well as a higher density of \dns servers. By simple proximity it the East coast is more connected to more of the \us. When you take out that factor, the West coast shines, indicating higher overall quality of internet connectivity.
+One of the general conclusions that we can draw from the \dns cache manipulation method is that western states fair better when the data is normalized by distance, while states on the East Coast are better with the true \rtt metrics. This makes intuitive sense: the Eastern \us has a higher population density than the west, as well as a higher density of \dns servers. By simple proximity it the East coast is more connected to more of the \us. When you take out that factor, the West coast shines, indicating higher overall quality of \dns connectivity to other states in the United States.

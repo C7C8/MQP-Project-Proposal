@@ -1,6 +1,28 @@
-1. DC Best
-2. Coasts are good
-3. Montana bad
-4. In between? Can't really say
-5. Alaska does not exist
-6. Wyoming, what the fuck? 
+After three distinctly different methods -- some overlapping on connectivity metrics and some not -- and comparative analyses to determine similarities and differences between the results, there are some broad conclusions that we can draw.
+
+\section{Areas with Superior Connectivity}
+
+\paragraph{Washington DC} Across all three methods, the area with the best internet connectivity by far is Washington DC. DC consistently ranks highest among the states\footnote{Or more accurately \textit{administrative areas} considering DC isn't a state, but for our purposes it's acceptable to lump DC in with the states.}, even with serious contenders such as the coastal states taken into consideration.
+
+As discussed in other chapters, this actually makes perfect sense. All heatmaps indicate that areas with higher populations, especially cities, have better internet connectivity on average. Washington DC is a zone that is \textit{only} a city, so it's effectively a single point of good internet connectivity without rural areas to weigh it down in the rankings. It's also the seat of the \us federal government, complete with the Pentagon just across a river, making the entire area one enormous governmental hub where massive information flow is a necessity. With this in mind, it's no wonder the city has the best internet connectivity.
+
+\paragraph{Regions of Dense Population} Areas of increased population density almost universally have better internet connectivity, which confirms expectations based on economic factors. \ISPs are more likely to expand into and prioritize areas with more paying customers, so those areas receive better infrastructure, more upgrades, and so on, ultimately leading to better connectivity.
+
+\paragraph{Coastal Regions} Broadly speaking, both the West coast and the East coast perform better than the central \us according to all metrics. This falls in line with the prior conclusion about regions of dense population: the coasts are more densely populated, therefore they have better internet connectivity.
+
+\section{Areas with Poor Connectivity}
+
+\paragraph{The Deep South} States part of the "deep south", in particular Alabama, Arkansas, Louisiana, Mississippi, and to a lesser extent Tennessee, universally have poor internet. Although there are others with worse internet, this region shows a strong unity in having poor connectivity. The reason for this is unknown, but we hypothesize it involves economic or political factors of the region.
+
+\paragraph{The Central Northwest} North states leaning central-North, such as Idaho, the Dakotas, and Montana have been observed to have poor connectivity across all three methods. Montana in particular is a region of egregiously poor internet, consistently at or near the absolute worst connectivity by every metric.
+
+\section{Anomalies}
+
+\paragraph{Wyoming} Wyoming, the least populous state in the nation, is rather anomalous. Under CAIDA/Atlas, it ranks near the bottom, site ping data shows it as being upper/middle, while with \dns cache manipulation, it is consistently in or near the top five. While we are not certain, these discrepancies are likely do to the relative lack of data we have for state.
+
+\paragraph{Alaska} Alaska is an anomaly simply because we lack data for it. It turns out that gathering internet connectivity data on Alaska is next to impossible, even when offering high incentives for workers on Amazon's Mechanical Turk.
+
+\section{Rankings}
+
+Unfortunately, beyond the broad, region-based conclusions drawn here, devising a statistically-valid ranking of all states is challenging. There are cluster-based approaches that can be used where applicable, or topological sort methods that can give a rough estimate, but nothing concrete. We can confidently assert that select states like California or Washington DC are near the top, and states like Montana are near the bottom, but the non-extremes of the states are difficult to distinguish between.
+

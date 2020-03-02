@@ -8,12 +8,14 @@ There have been several past attempts at evaluating \us internet connectivity, i
 \subsection{"The Internet Connected Project"}
 In 2018, another \mqp was run at \wpi, also with the goal of mapping the internet connectivity across the \us. They used traceroutes from Worcester, Massachusetts to top websites, and also performed \dns cache manipulation to collect their data. They had mixed success collecting data, but they were ultimately able to produce a map of all their \dns data interpolated to cover the entire \us, shown in \cref{fig:interpolated_dns_map}. They did draw any conclusions on the best or worst states \cite{Fakult2019}.
 
-\begin{wrapfigure}[12]{L}{0.5\textwidth}
+% \begin{wrapfigure}[12]{L}{0.5\textwidth}
+\begin{figure}[h]
     \centering
-    \includegraphics[width=0.5\textwidth]{dns/prior_mqp/dns-map.png}
-    \caption{Interpolated DNS map from a past MQP\cite{Fakult2019}}
+    \includegraphics[width=0.75\textwidth]{dns/prior_mqp/dns-map.png}
+    \caption{Interpolated DNS map from "The Internet Connected Project"\cite{Fakult2019}}
     \label{fig:interpolated_dns_map}
-\end{wrapfigure}
+\end{figure}
+% \end{wrapfigure}
 
 The concept of \dns cache manipulation was ultimately used in our own research in evaluating and ranking internet connectivity, discussed in \cref{sec:dns}.
 

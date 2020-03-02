@@ -1,54 +1,66 @@
 \section{Analysis}\label{sec:results_web_ping}
+The site ping website yielded data across the entire \us. We had to find ways of visualizing the data and analyzing trends.
 
-
-\todo{Evan: Blurb}
 \subsection{Initial Site Ping Analysis}
 
 The first analyses was conducted live, directly on the site for users to see on the aforementioned D3-powered map view (see \cref{fig:siteping_state_view}). This map allowed us to both come to early conclusions about the data, and allowed participants to be able to see the data in real time. This map is calculated by averaging all of the cities in the state and then using the \iqr to scale the color scheme. 
 
-\begin{figure}
+% \begin{wrapfigure}[13]{L}{0.55\textwidth}
+\begin{figure}[hb]
     \centering
-    \includegraphics{siteping/Siteping_state_map.png}
+    \includegraphics[width=0.55\textwidth]{siteping/Siteping_state_map.png}
     \caption{State view chloropleth map}
     \label{fig:siteping_state_view}
 \end{figure}
+% \end{wrapfigure}
 
 Data was aggregated server-side by state and city to rank them from best and worst and display the rankings on the site. Every new data point caused an update in the analyses -- both for our own uses and to help users understand how their state performs. An example of these rankings is shown in \cref{fig:siteping_rankings}.
 
-\begin{figure}[h]
+\begin{figure}[htb]
+% \begin{wrapfigure}[15]{R}{0.55\textwidth}
     \centering
-    \includegraphics{siteping/Sitping_Rankings.png}
+    \includegraphics[width=0.55\textwidth]{siteping/Sitping_Rankings.png}
     \caption{Site ping live-updating state rankings}
     \label{fig:siteping_rankings}
+% \end{wrapfigure}
 \end{figure}
 
 \subsection{Data Quality}
 
 The first measure of data quality tried was standard deviation. \Cref{fig:siteping_stdev_dist} shows the per-location distribution of these values, which follow a fairly smooth curve.
 
-\begin{figure}[h]
+\begin{figure}[htb]
+% \begin{wrapfigure}[16]{R}{0.55\textwidth}
     \centering
-    \includegraphics{siteping/siteping_rtt_stdev_distribution.png}
+    \includegraphics[width=0.55\textwidth]{siteping/siteping_rtt_stdev_distribution.png}
     \caption{Distribution of site ping standard deviations by location}
     \label{fig:siteping_stdev_dist}
+% \end{wrapfigure}
 \end{figure}
 
 The overwhelming majority of points have standard deviations of around 150 milliseconds. This is a fairly high standard deviation, most likely caused by the small number of data points for each location.
 
-\begin{figure}[h]
+% \begin{wrapfigure}[13]{R}{0.55\textwidth}
+\begin{figure}[htb]
     \centering
-    \includegraphics{siteping/siteping_rtt_cv_distribution.png}
-    \caption{Distribution of Coefficient of Variations pair by location}
+    \includegraphics[width=0.55\textwidth]{siteping/siteping_rtt_cv_distribution.png}
+    \caption{Distribution of coefficients of variation by location}
     \label{fig:siteping_cv_dist}
 \end{figure}
 
-Next, we calculated the \cv for each location, shown in \cref{fig:siteping_cv_dist}. \CVs are dimensionless measures of the ratio between standard deviation and mean, interpreted the same across any data set. Most of the \cvs are around 1, meaning there is significant variance in the data. Again, this is most likely related to the relatively small number of data points that exist for each location.
+Next, we calculated the \cv for each location, shown in \cref{fig:siteping_cv_dist}; most of them are around 1, meaning there is significant variance in the data. Again, this is most likely related to the relatively small number of data points that exist for each location.
+
+\subsection{Filtering}
+
+To remove outliers in our data we used a simple z-score filter with z-score of two. More info on z-score filtering can be found in \cref{sec:z-score-filtering}. When the data was filtered, we found that it brought the resulting value standard deviation from 511 to 175 while still keeping 95\% of the data points. 
+
+We also filtered out all of the data that came from mobile devices. This was due to the unpredictability of it and the fact that we could not tell if they were connected to a cellular connection or a broadband connection. 
 
 \subsubsection{Evaluating State Rankings}
 
-\begin{figure}[h]
+\begin{figure}[htb]
     \centering
-    \includegraphics{siteping/siteping_clusters_cdf.png}
+    \includegraphics[width=0.6\textwidth]{siteping/siteping_clusters_cdf.png}
     \caption{Continuous distribution function of state rankings}
     \label{fig:siteping_cdf}
 \end{figure}
@@ -56,22 +68,29 @@ To examine whether or not it was statistically allowable to aggregate the data b
 
 \input{text/web-ping/tables/state_rankings} 
 
-\Cref{tab:site_ping_state_rankings} only provides a rough estimate of Internet Connectivity. As expected, the more densely populated areas have better connectivity, like DC and Delaware. More rural areas, like Alaska and Montana have worse connectivity. North Dakota was filtered out with z-score filtering.
-\todo{David: add more about the rankings to this section}
+\Cref{tab:site_ping_state_rankings} only provides a rough estimate of Internet Connectivity. It was created based on the median RTT of all of the data points within a state after z-score filtering the entire data set. Median was chosen because we felt it gives the best representation of the state while not being highly influenced by outliers. While this is not a comprehensive rank, it does provided a strong high level view of internet connectivity across the US. As expected, the more densely populated areas have better connectivity, like DC and Delaware. More rural areas, like Alaska and Montana have worse connectivity. North Dakota was filtered out with z-score filtering.
+
 \subsection{Results}
 
 \subsubsection{CDNs}
-When searching for the small image files we discovered that the vast majority of websites use a \cdn for serving their content, including both JavaScript as well as static content. As such, our ping results are a reflection of a user's connection to each \cdn. To determine if there was a strong correlation between user location and speed to a given \cdn we attempted to determine the \cdn each site was using through \icmp pings and reverse \dns lookups, then mapped the pings for a given \cdn (including pings to all the sites that use that \cdn). We found that the \rtt to a given \cdn tended to be very similar across a given area. \todo{Evan: add map}
+When searching for the small image files we discovered that the vast majority of websites use a \cdn for serving their content, including both JavaScript as well as static content. As such, our ping results are a reflection of a user's connection to each \cdn. To determine if there was a strong correlation between user location and speed to a given \cdn we attempted to determine the \cdn each site was using through \icmp pings and reverse \dns lookups, then mapped the pings for a given \cdn (including pings to all the sites that use that \cdn). We found that the \rtt to a given \cdn tended to be very similar across a given area.
+
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width=1\textwidth]{images/siteping/cdn_combined.png}
+    \caption{Pings to sites on the Akamai CDN} % you've been visited by the latex fairy
+    \label{fig:akamai_cdn}
+\end{figure}
 
 \subsubsection{Final Heat Map}
 The final heat map produced from the site ping data shows some pretty clear trends. The coastal and central states have significantly lower ping times than the south-eastern states and north-western states. In states with high ping times there are pockets of low ping times around major cities, such as in  Tampa, Jacksonville, Orlando, and Miami, Florida; Knoxville and Memphis, Tennessee; and Colorado Springs, Colorado. There are some areas with surprising, and somewhat dubious results. For example, New York City, New York; Seattle, Washington; and Los Angeles, California all appear to be in pockets of poor \rtt surrounded by good \rtt.
 
-\todo{Evan: do}
-The heat map shows many states that are heavily divided by \rtt. This suggests that a more appropriate way of ranking states is with the percentage of each state that has a "good" \rtt.
+% \todo{Evan: do}   
+% The heat map shows many states that are heavily divided by \rtt. This suggests that a more appropriate way of ranking states is with the percentage of each state that has a "good" \rtt.
 
-\begin{figure}[h]
+\begin{figure}[htb]
     \centering
-    \includegraphics{images/siteping/site_ping_rtt_idw.jpg}
+    \includegraphics[width=0.75\textwidth]{images/siteping/site_ping_rtt_idw.png}
     \caption{Final heat map} % you've been visited by the latex fairy
     \label{fig:siteping_heatmap}
 \end{figure}

@@ -6,57 +6,65 @@ The following sections describe analysis of the \caida and \ripe Atlas data in a
 
 To determine the quality of the data, we made a series of \kde charts with the Python library \textit{seaborn} \cite{seaborn}. 
 
-\begin{wrapfigure}[18]{R}{0.55\textwidth}
+% \begin{wrapfigure}[16]{L}{0.65\textwidth}
+\begin{figure}[t]
     \centering
-    \includegraphics[width=0.55\textwidth]{caida/rtt_distribution.png}
+    \includegraphics[width=0.65\textwidth]{caida/rtt_distribution.png}
     \caption{RTT distribution, direct ping calculation}
     \label{fig:caida_rtt_distribution}
-\end{wrapfigure}
+\end{figure}
+% \end{wrapfigure}
 
 The most immediately useful distribution is that of the \rtt between \ip pairs, shown for direct-calculated \rtts in \cref{fig:caida_rtt_distribution}. The distribution appears weakly bimodal, which we hypothesize is due to the global nature of \ripe Atlas and \caida's individual measurement networks. The leftmost peak corresponds to measurements to a device that shares a land mass with the device performing the traceroute, while the rightmost peak corresponds to a combination of devices on a different land mass and devices with lower-performing connections. \Cref{fig:caida_distance_distribution} appears to confirm this hypothesis, since it too is similarly bimodal.
 
-% \begin{wrapfigure}[15]{R}{0.55\textwidth}
-\begin{figure}
+% \begin{wrapfigure}[15]{L}{0.65\textwidth}
+\begin{figure}[htb]
     \centering
-    \includegraphics[width=0.75\textwidth]{caida/distance_distribution.png}
-    \caption{IP pair distance distribution}
+    \includegraphics[width=0.65\textwidth]{caida/distance_distribution.png}
+    \caption{Address pair distance distribution}
     \label{fig:caida_distance_distribution}
 \end{figure}
 % \end{wrapfigure}
 
  \Cref{fig:caida_rtt_distribution_indirect} shows the distribution of \rtts calculated using the indirect ping calculation method, of which a calculated \textapprox29\% are below zero -- an impossible value. Since a significant fraction of the data points are completely impossible it was decided that this data was too unreliable for further analysis. The remainder of the data analyses in this section are based on the direct ping calculation method only.
 
-\begin{wrapfigure}[18]{L}{0.55\textwidth}
+% \begin{wrapfigure}[18]{l}{0.65\textwidth}
+\begin{figure}[htb]
     \centering
-    \includegraphics[width=0.55\textwidth]{caida/rtt_distribution_indirect.png}
+    \includegraphics[width=0.65\textwidth]{caida/rtt_distribution_indirect.png}
     \caption{Distribution of RTT between IP pairs, indirect ping calculation}
     \label{fig:caida_rtt_distribution_indirect}
-\end{wrapfigure}
+\end{figure}
+% \end{wrapfigure}
 
 To further assess data quality we turned to measures of the data spread for each data point. \Cref{fig:caida_measurements_distribution} shows the distribution of measurement counts between each \ip address pair, showing that although most pairs had on the order of 1-20 measurements, a sizeable fraction had more than that, and there were even some in the 500+ measurements range. This is likely a result of the way \ripe Atlas and \caida nodes are networked. A node's local gateway would always show up on a traceroute (unless configured to not respond to pings), as would common paths through a node's \isp, so these \ip addresses are measured extremely frequently.
 
-\begin{figure}[h]
+% \begin{wrapfigure}{R}{0.4\textwidth}
+\begin{figure}[htb]
     \centering
-    \includegraphics{caida/measurements_distribution.png}
-    \caption{Distribution of measurements count for each IP pair}
+    \includegraphics[width=0.65\textwidth]{caida/measurements_distribution.png}
+    \caption{Distribution of measurements count for each address pair}
     \label{fig:caida_measurements_distribution}
 \end{figure}
+% \end{wrapfigure}
 
-\begin{figure}[h]
+% \begin{wrapfigure}{L}{0.65\textwidth}
+\begin{figure}[htb]
     \centering
-    \includegraphics{caida/rtt_stdev_distribution.png}
-    \caption{Distribution of IP pair standard deviations}
+    \includegraphics[width=0.65\textwidth]{caida/rtt_stdev_distribution.png}
+    \caption{Distribution of address pair standard deviations}
     \label{fig:caida_stdev_distribution}
+% \end{wrapfigure}
 \end{figure}
 
 The first measure of data quality used is standard deviation. \Cref{fig:caida_stdev_distribution} shows the distribution of standard deviations across all measured \ip address pairs (for charting purposes, pairs with only one measurement were interpreted as 0 standard deviation). The chart shows an incredibly smooth curve where the overwhelming majority of pairs have standard deviations well below 20 ms.
 
 Since standard deviations are all relative, we next calculated a \cv for each \ip address pair as a measurement of data quality. \Cref{fig:caida_cv_distribution} shows the distribution of \cvs for all \ip address pairs, with the majority of \cvs below 0.1 -- in other words, very good data with low spread for each pair.
 
-\begin{figure}[h]
+\begin{figure}[htb]
     \centering
-    \includegraphics{caida/rtt_cv_distribution.png}
-    \caption{Distribution of IP pair coefficients of variation}
+    \includegraphics[width=0.65\textwidth]{caida/rtt_cv_distribution.png}
+    \caption{Distribution of address pair coefficients of variation}
     \label{fig:caida_cv_distribution}
 \end{figure}
 
@@ -64,9 +72,9 @@ Since standard deviations are all relative, we next calculated a \cv for each \i
 
 Each data point comprises an \ip address pair, but each destination \ip address -- that is, each \ip address that a \caida or \ripe Atlas node ran a measurement against -- appears many times, at least once for every node that ran a measurement against it. Averaging these won't work (it makes little sense to average together measurements from a server in Boston with a server in Moscow against a server in New York, since the Moscow measurement node will naturally report a much higher \rtt), so normalization is needed. The first method used was simple normalization by distance, which returns values in ms/km. This may be unconventional, but milliseconds and kilometers are natural units for \rtts and distance, respectively.
 
-\begin{figure}[h]
+\begin{figure}[htb]
     \centering
-    \includegraphics{caida/ms_per_km_distribution.png}
+    \includegraphics[width=0.75\textwidth]{caida/ms_per_km_distribution.png}
     \caption{ms/km connectivities distribution}
     \label{fig:caida_ms_per_km_distribution}
 \end{figure}
@@ -77,7 +85,7 @@ Unfortunately this metric is challenging to chart with any color scale. The majo
 
 The speed of light is 299.79246 km/ms, so the theoretical minimum \rtt between two points \textapprox300 km apart is \textapprox2 ms -- one ms one way, and another on the return trip. All telecommunications happen over electromagnetic mediums,\footnote{With the possible exception of \ipaoc, which has been successfully demonstrated \cite{rfc1149, BergenLinuxUserGroup2001a}} be it fibre optic cables or copper wires, so communications always have a transmission delay proportional to the speed of light. If the \rtt was higher than two milliseconds, there must logically be some loss in speed somewhere in the network, whether that means poor infrastructure or wiring that doesn't follow a straight line to its target -- either way, an inefficiency. The smaller the \rtt, the higher the efficiency, and vice versa. This has the desirable quality that extreme outliers are always between zero and one regardless of how high the \rtt is. The formula for speed-of-light-efficiency based on \rtts is shown in \cref{form:speed_of_light_efficiency}.
 
-\begin{formula}[h]
+\begin{formula}[htb]
     \begin{equation}
         E = \frac{2d}{t \times 299.79246}
     \end{equation}
@@ -87,9 +95,9 @@ The speed of light is 299.79246 km/ms, so the theoretical minimum \rtt between t
 
 Speed-of-light efficiency can also be thought of as a scalar multiplied by $c$, the speed of light -- it's the equivalent "speed" of a ping. With this improved normalization scheme to work with, the subtle differences and patterns like those in \cref{fig:speed_of_light_efficiency_distribution} can be seen in the data when mapped. Also important is that this normalization method provides another means of filtering data -- anything above 1.0 efficiency can be removed since it violates the laws of physics by exceeding the speed of light.
 
-\begin{figure}[h]
+\begin{figure}[ht]
     \centering
-    \includegraphics{caida/frac_c_efficiency_distribution.png}
+    \includegraphics[width=0.65\textwidth]{caida/frac_c_efficiency_distribution.png}
     \caption{Speed-of-light efficiencies distribution}
     \label{fig:speed_of_light_efficiency_distribution}
 \end{figure}
@@ -98,9 +106,9 @@ Speed-of-light efficiency can also be thought of as a scalar multiplied by $c$, 
 
 The simplest way of mapping a set of points on a coordinate plane with values attached to each of them is a simple scatterplot, but with massive amounts of unevenly distributed data it becomes tough to visualize and draw conclusions. For example, in \cref{fig:caida_scatterplot} we see a point for \textit{every single pinged device} in the \caida and \ripe Atlas data set that was collected and analyzed -- at least, those in the \us.
 
-\begin{figure}[h]
+\begin{figure}[htb]
     \centering
-    \includegraphics{caida/scatterplot.png}
+    \includegraphics[width=0.65\textwidth]{caida/scatterplot.png}
     \caption{Traceroute scatterplot, colored by speed-of light-efficiency}
     \label{fig:caida_scatterplot}
 \end{figure}
@@ -111,7 +119,7 @@ To solve this problem the map needs some interpolation to fill in the gaps and m
 
 \subsubsection{Quadtree grouping} One of the first techniques tried for grouping data together was something we dubbed "quadtree grouping". The technique is adapted from methods used to optimize collision detection in 2D games where the screen is cut into four boxes based on the number of entities in each quadrant, then each box is cut into four more with the same metric, and so on until some threshold with an optimal number of entities per box is reached. This was performed on the data set here and adjusted for different parameters like maximum tree depth, maximum nodes per box, etc.
 
-\begin{figure}[h]
+\begin{figure}[htb]
     \centering
     \includegraphics{caida/ms_per_km_quadplot.png}
     \caption{Traceroute ms/km quadplot, generated by quadtree grouping}
@@ -124,7 +132,7 @@ To solve this problem the map needs some interpolation to fill in the gaps and m
 
 At this point it was discovered that, due to the fairly low resolution of \ip address geolocation, many measurements from different \ip address pairs share the same coordinates. This made even further grouping by location possible, down to only \textapprox55,000 data points. This is much more manageable to visualize, so the next interpolation method tried was simple nearest-neighbor interpolation (which prior to grouping would have been infeasible).
 
-\begin{figure}[h]
+\begin{figure}[htb]
     \centering
     \includegraphics{caida/nearest_neighbor.jpg}
     \caption{Traceroute speed-of-light efficiency nearest-neighbor diagram}
@@ -137,7 +145,7 @@ At this point it was discovered that, due to the fairly low resolution of \ip ad
 
 Since nearest-neighbor interpolation proved insufficient, the next method tried was linear interpolation. Instead of assuming that all points nearer to a given data point than any other have the same value as the data point does, linear interpolation assigns values at each point between the different data points according to a simple linear scaling model. This has the effect of making the map look far less discrete.
 
-\begin{figure}[h]
+\begin{figure}[htb]
     \centering
     \includegraphics{caida/frac_c_efficiency_linear_divergent_heatmap.png}
     \caption{Linear-interpolated traceroute speed-of-light efficiency heatmap}
@@ -154,9 +162,9 @@ Since nearest-neighbor interpolation proved insufficient, the next method tried 
 
 Interestingly, no matter how the data is visualized it always has a great deal of variance from one area to another -- that is, the map looks "splotchy". Loosely speaking, this is also what we would expect to see, since people tend to report a great deal of subjective difference in internet quality from one area to another.
 
-\begin{figure}[h]
+\begin{figure}[htb]
     \centering
-    \includegraphics{caida/speed_of_light_idw.jpg}
+    \includegraphics{caida/speed_of_light_idw.png}
     \caption{Inverse distance weighting traceroute speed-of-light efficiency heatmap}
     \label{fig:caida_idw_heatmap}
 \end{figure}
