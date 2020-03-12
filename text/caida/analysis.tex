@@ -70,7 +70,7 @@ Since standard deviations are all relative, we next calculated a \cv for each \i
 
 \subsection{Primitive Connectivity Analyses}
 
-Each data point comprises an \ip address pair, but each destination \ip address -- that is, each \ip address that a \caida or \ripe Atlas node ran a measurement against -- appears many times, at least once for every node that ran a measurement against it. Averaging these won't work (it makes little sense to average together measurements from a server in Boston with a server in Moscow against a server in New York, since the Moscow measurement node will naturally report a much higher \rtt), so normalization is needed. The first method used was simple normalization by distance, which returns values in ms/km. This may be unconventional, but milliseconds and kilometers are natural units for \rtts and distance, respectively.
+Each data point comprises an \ip address pair, but each destination \ip address -- that is, each \ip address that a \caida or \ripe Atlas node ran a measurement against -- appears many times, at least once for every node that ran a measurement against it. Averaging these will not work (it makes little sense to average together measurements from a server in Boston with a server in Moscow against a server in New York, since the Moscow measurement node will naturally report a much higher \rtt), so normalization is needed. The first method used was simple normalization by distance, which returns values in ms/km. This may be unconventional, but milliseconds and kilometers are natural units for \rtts and distance, respectively.
 
 \begin{figure}[htb]
     \centering
@@ -83,7 +83,7 @@ The ms/km distribution shown in \cref{fig:caida_ms_per_km_distribution} is uninf
 
 Unfortunately this metric is challenging to chart with any color scale. The majority of values are between 0.0 and 0.05 ms/km but values an order of magnitude higher must also be charted, and a log scale fails to capture important but relatively small variances between areas. To solve this, we devised a new metric based on efficiency relative to the speed of light.
 
-The speed of light is 299.79246 km/ms, so the theoretical minimum \rtt between two points \textapprox300 km apart is \textapprox2 ms -- one ms one way, and another on the return trip. All telecommunications happen over electromagnetic mediums,\footnote{With the possible exception of \ipaoc, which has been successfully demonstrated \cite{rfc1149, BergenLinuxUserGroup2001a}} be it fibre optic cables or copper wires, so communications always have a transmission delay proportional to the speed of light. If the \rtt was higher than two milliseconds, there must logically be some loss in speed somewhere in the network, whether that means poor infrastructure or wiring that doesn't follow a straight line to its target -- either way, an inefficiency. The smaller the \rtt, the higher the efficiency, and vice versa. This has the desirable quality that extreme outliers are always between zero and one regardless of how high the \rtt is. The formula for speed-of-light-efficiency based on \rtts is shown in \cref{form:speed_of_light_efficiency}.
+The speed of light is 299.79246 km/ms, so the theoretical minimum \rtt between two points \textapprox300 km apart is \textapprox2 ms -- one ms one way, and another on the return trip. All telecommunications happen over electromagnetic mediums,\footnote{With the possible exception of \ipaoc, which has been successfully demonstrated \cite{rfc1149, BergenLinuxUserGroup2001a}} be it fibre optic cables or copper wires, so communications always have a transmission delay proportional to the speed of light. If the \rtt was higher than two milliseconds, there must logically be some loss in speed somewhere in the network, whether that means poor infrastructure or wiring that does not follow a straight line to its target -- either way, an inefficiency. The smaller the \rtt, the higher the efficiency, and vice versa. This has the desirable quality that extreme outliers are always between zero and one regardless of how high the \rtt is. The formula for speed-of-light-efficiency based on \rtts is shown in \cref{form:speed_of_light_efficiency}.
 
 \begin{formula}[htb]
     \begin{equation}
@@ -152,7 +152,7 @@ Since nearest-neighbor interpolation proved insufficient, the next method tried 
     \label{fig:caida_linear_interpolation}
 \end{figure}
 
-\Cref{fig:caida_linear_interpolation} uses the same divergent colormap as \cref{fig:caida_nearest_neighbor} but with linear interpolation instead, showing a far smoother map that preserves the same patterns. It doesn't look as discrete but it still has an angular affect to it, with sharp angles showing through where Voronoi cell bounds and intersections previously were.
+\Cref{fig:caida_linear_interpolation} uses the same divergent colormap as \cref{fig:caida_nearest_neighbor} but with linear interpolation instead, showing a far smoother map that preserves the same patterns. It does not look as discrete but it still has an angular affect to it, with sharp angles showing through where Voronoi cell bounds and intersections previously were.
 
 \subsubsection{Inverse Distance Weighting}
 
