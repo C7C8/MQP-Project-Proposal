@@ -1,9 +1,9 @@
 \section{Implementation}\label{sec:web_ping_impl}
 
-To measure internet connectivity from a users browser we had to to develop ways to collect data via a user's browser, and find ways of distributing the site to users.
+To measure Internet connectivity from a users browser we had to to develop ways to collect data via a user's browser, and find ways of distributing the site to users.
 
 \subsection{Data Collection}
-JavaScript does not have an easy or well-supported method for client-side browsers to measure internet connectivity. After researching alternatives to the network information \api, we settled on the idea of timing how long it takes for the client to load small images. Early prototypes were based on a similar tool called PingJS \cite{Frederic2016a}. To collect data, the site dynamically inserts \html \texttt{img} tags pointing to a number of small resources, each owned by one of the top 45 sites in the \us. The site records the time prior to \texttt{img} tag insertion and again upon completion of loading; this method is shown in \cref{code:web_ping_code}. Once resources from all 45 sites have been loaded, the client packages the data into a \json object and sends it via web socket to the server, which stores the data in a MongoDB database \cite{MongoDB2019a}. 
+JavaScript does not have an easy or well-supported method for client-side browsers to measure Internet connectivity. After researching alternatives to the network information \api, we settled on the idea of timing how long it takes for the client to load small images. Early prototypes were based on a similar tool called PingJS \cite{Frederic2016a}. To collect data, the site dynamically inserts \html \texttt{img} tags pointing to a number of small resources, each owned by one of the top 45 sites in the \us. The site records the time prior to \texttt{img} tag insertion and again upon completion of loading; this method is shown in \cref{code:web_ping_code}. Once resources from all 45 sites have been loaded, the client packages the data into a \json object and sends it via web socket to the server, which stores the data in a MongoDB database \cite{MongoDB2019a}. 
 
 \begin{code}[htb]
     \centering

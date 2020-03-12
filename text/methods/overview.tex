@@ -1,13 +1,13 @@
 \section{Measurement Methods}\label{sec:methods_overview}
 
-We chose three methods for measuring internet connectivity as described in \cref{sec:connectivity_defs}: mass traceroute data analysis, crowd-sourced "site ping" data, and \dns cache manipulation. These methods were pursued in parallel in hopes that by the end of our project, their results could be compared.
+We chose three methods for measuring Internet connectivity as described in \cref{sec:connectivity_defs}: mass traceroute data analysis, crowd-sourced "site ping" data, and \dns cache manipulation. These methods were pursued in parallel in hopes that by the end of our project, their results could be compared.
 
 
-\paragraph{Traceroute Analysis} Two different organizations, \ripe (through its Atlas project) and \caida have large, distributed networks of devices that run traceroutes to every part of the internet around the clock. This data is publicly available for download, and totals in tens of terabytes of data. Analysis of the data can reveal useful information about connectivity and networks in the \us using the normalized \rtt-to-everywhere metric described in \cref{sec:definition_rtt_to_everywhere}.
+\paragraph{Traceroute Analysis} Two different organizations, \ripe (through its Atlas project) and \caida have large, distributed networks of devices that run traceroutes to every part of the Internet around the clock. This data is publicly available for download, and totals in tens of terabytes of data. Analysis of the data can reveal useful information about connectivity and networks in the \us using the normalized \rtt-to-everywhere metric described in \cref{sec:definition_rtt_to_everywhere}.
 
 Data collection and analysis of this method is described in \cref{sec:caida}.
 
-\paragraph{"Site Ping"} The "site ping" method is a web-based, crowd-sourced approach that involves a user's web browser attempting to download a small asset from popular websites and measuring how long it takes. This method allows us to estimate how long it takes for a user to interact with a popular website, a measure of internet connectivity described in \cref{sec:definition_rtt_site_ping}.
+\paragraph{"Site Ping"} The "site ping" method is a web-based, crowd-sourced approach that involves a user's web browser attempting to download a small asset from popular websites and measuring how long it takes. This method allows us to estimate how long it takes for a user to interact with a popular website, a measure of Internet connectivity described in \cref{sec:definition_rtt_site_ping}.
 
 This method is detailed in \cref{sec:web-ping}.
 

@@ -113,7 +113,7 @@ The simplest way of mapping a set of points on a coordinate plane with values at
     \label{fig:caida_scatterplot}
 \end{figure}
 
-Some simple relationships can be inferred with moderate difficulty, like better internet connections near the coast or possibly major cities, but otherwise this map is only good at confirming that geolocation of IP addresses works. Many areas simply do not have measurements either, and those that appear covered look that way because the dots for each measurement were inflated for visual effect. If they were more accurately represented to-scale as single pixels, the map would be sparse.
+Some simple relationships can be inferred with moderate difficulty, like better Internet connections near the coast or possibly major cities, but otherwise this map is only good at confirming that geolocation of IP addresses works. Many areas simply do not have measurements either, and those that appear covered look that way because the dots for each measurement were inflated for visual effect. If they were more accurately represented to-scale as single pixels, the map would be sparse.
 
 To solve this problem the map needs some interpolation to fill in the gaps and make the data easier to understand. Ideally someone looking at the map should be able to point to a spot on the map and get an estimate for connectivity at that location, even if there was not a measurement at precisely that location. However, even after z-score filtering, aggregation by source-destination pairs, and more filtering, there were still millions of data points within the \us alone. To that end we tried some unusual techniques for further aggregating the data together, in ways that were more manageable for visualization tools. It was also decided that we should not lose resolution as the density of points increased. For example, drawing a grid of static boxes on top of the map and grouping using those would not do because there may be a city with thousands of points in one, and a rural area with only a few points in another, but they'd both take up the same area on the map.
 
@@ -139,7 +139,7 @@ At this point it was discovered that, due to the fairly low resolution of \ip ad
     \label{fig:caida_nearest_neighbor}
 \end{figure}
 
-\Cref{fig:caida_nearest_neighbor} shows a nearest-neighbor plot, otherwise known as a Voronoi diagram \cite{Malhotra2017a}, of the \caida and \ripe Atlas data combined, generated with Python \textit{matplotlib} and \textit{scikit-learn} \cite{scipy, matplotlib}. The colormap is a divergent linear colormap, where blue is worse-than-average and red is better-than-average efficiency. This does an arguably better job of presenting the data than quadtree grouping, but it's visually noisy and suffers from expanded influence of points in sparse areas. For instance, consider the large splotch in Utah, which corresponds to areas arounhd Salt Lake City. While it's likely accurate that the city has far better internet connectivity than its desert surroundings, it is likely inaccurate to say that the areas within the few hundred mile radius shown on the map have the same level of connectivity.
+\Cref{fig:caida_nearest_neighbor} shows a nearest-neighbor plot, otherwise known as a Voronoi diagram \cite{Malhotra2017a}, of the \caida and \ripe Atlas data combined, generated with Python \textit{matplotlib} and \textit{scikit-learn} \cite{scipy, matplotlib}. The colormap is a divergent linear colormap, where blue is worse-than-average and red is better-than-average efficiency. This does an arguably better job of presenting the data than quadtree grouping, but it's visually noisy and suffers from expanded influence of points in sparse areas. For instance, consider the large splotch in Utah, which corresponds to areas arounhd Salt Lake City. While it's likely accurate that the city has far better Internet connectivity than its desert surroundings, it is likely inaccurate to say that the areas within the few hundred mile radius shown on the map have the same level of connectivity.
 
 \subsubsection{Linear interpolation}
 
@@ -160,7 +160,7 @@ Since nearest-neighbor interpolation proved insufficient, the next method tried 
 
 \Cref{fig:caida_idw_heatmap} shows the data as interpolated with \idw and touched up to include state lines, major cities, and a key. This is what we consider to be the final heatmap generated from the \caida \& \ripe Atlas data. It roughly confirms our expectations that the more densely-populated coasts would have have better connectivity on average while adequately highlighting large-scale trends.
 
-Interestingly, no matter how the data is visualized it always has a great deal of variance from one area to another -- that is, the map looks "splotchy". Loosely speaking, this is also what we would expect to see, since people tend to report a great deal of subjective difference in internet quality from one area to another.
+Interestingly, no matter how the data is visualized it always has a great deal of variance from one area to another -- that is, the map looks "splotchy". Loosely speaking, this is also what we would expect to see, since people tend to report a great deal of subjective difference in Internet quality from one area to another.
 
 \begin{figure}[htb]
     \centering
