@@ -2,7 +2,7 @@
 
 A traceroute is a method for determining which servers are along a packet's route, and determining the \rtt to each of them. Most traceroute programs work using \icmp but in theory anything that uses \ip works.
 
-Traceroutes hinge on the \ttl field of \ip packets, an eight-bit field that is decremented by one every time the packet is processed \cite{rfc791}. Typically this is set reasonably high so packets can take many hops to reach their destination, but low enough that if undeliverable they will eventually be discarded. Upon discard, most servers respond with an \icmp packet to the original host indicating \ttl expiry. This message is received by the machine running the traceroute, which uses the sender's \ip address and knowledge of the \ttl of the packet it sent out to place the server somewhere along the route. This process is visualized in \cref{fig:traceroute_diagram}.
+Traceroutes hinge on the \ttl field of \ip packets, an eight-bit field that is decremented by one every time the packet is processed \cite{rfc791}. Typically the \ttl is set reasonably high so packets can take many hops to reach their destination, but low enough that if undeliverable they will eventually be discarded. Upon discard, most servers respond with an \icmp packet to the original host indicating \ttl expiry. This message is received by the machine running the traceroute, which uses the sender's \ip address and knowledge of the \ttl of the packet it sent out to place the server somewhere along the route. This process is visualized in \cref{fig:traceroute_diagram}.
 
 \begin{figure}[htb]
     \centering

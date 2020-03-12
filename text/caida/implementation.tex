@@ -8,7 +8,7 @@ The pipeline was implemented as a bash script that operated in three stages. Thi
 
 \subsubsection{Extraction} \ripe Atlas distributes data in compressed (gzip) format, each file of which contains a single 10 GB \json file. \caida distributes files in compressed WARTS format, which each expand to 3 GB \json files when extracted and converted. Since 10 GB files are unwieldy and the file format permitted it, \ripe Atlas files were split into chunks of 100,000 traceroutes each -- about 3,000 files total. Each file was fed to a bash script that encompassed the entire extraction and conversion process, in addition to running the traceroute hopper.
 
-Internally, the traceroute hopper maps a traceroute file into memory with a read-ahead flag set. This forces the operating system into loading the entire file into memory at once so future reads to the file never hit the disk, freeing up disk usage for other processes (such as the database). After loading, the program reads through the file line-by-line, as both \ripe Atlas and \caida \json files are composed of thousands of \json objects per file, one per line. This is shown in \cref{code:load_json}.
+Internally, the traceroute hopper maps a traceroute file into memory with a read-ahead flag set. This forces the operating system into loading the entire file into memory at once so future reads to the file never hit the disk, freeing up disk usage for other processes (such as the database). After loading, the program reads through the file line-by-line, as both \ripe Atlas and \caida \json files are composed of thousands of \json objects per file, one per line. This method is shown in \cref{code:load_json}.
 
 \begin{code}[h]
     \inputcpp{text/caida/code/load_json.cpp}

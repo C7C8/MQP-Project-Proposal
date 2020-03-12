@@ -99,7 +99,7 @@ Since there we multiple data points for each recursive-authoritative server pair
 
 We chose to proceed with \texttt{v=1.0} and \texttt{z=2}, which left the vast majority of pairs in the data set excluding only the most inconsistent measurements. The reasoning behind this is that we aren't just interested in stable connections - so we left potentially unstable or inconsistent measurements in the data set.
 
-\subsection{Aggregating Pairs by Recursive State}
+\subsection{Aggregating Pairs by Recursive Server State}
 
 One option to further aggregate the pair data is to group it by the location of the recursive server in each pair. This results in a list of \rtts, either true or normalized by distance, that can be aggregated into a single value for each state. This is one way of making comparisons between states.
 
@@ -245,7 +245,3 @@ On the other hand, the normalized maps, \cref{fig:dns_auth_agg_num_better_map_no
 Overall, these maps show that there are few meaningful conclusions that we can draw from weighting states by population: when doing so, states are far too indistinguishable from each other. However, the unweighted maps show that even if we cannot draw conclusions about specific states when eliminating the implicit \dns weighting, we can show that, for true \rtt, the East Coast and the Midwest tend to perform better as a region, as does the West Coast for normalized \rtt.
 
 \FloatBarrier
-
-\section{Conclusions}
-
-One of the general conclusions that we can draw from the \dns cache manipulation method is that western states fair better when the data is normalized by distance, while states on the East Coast are better with the true \rtt metrics. This makes intuitive sense: the Eastern \us has a higher population density than the west, as well as a higher density of \dns servers. By simple proximity it the East coast is more connected to more of the \us. When you take out that factor, the West coast shines, indicating higher overall quality of \dns connectivity to other states in the United States.

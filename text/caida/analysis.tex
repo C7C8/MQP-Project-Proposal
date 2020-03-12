@@ -4,7 +4,7 @@ The following sections describe analysis of the \caida and \ripe Atlas data in a
 
 \subsection{Data Quality}\label{sec:caida_data_quality}
 
-To determine the quality of the data, we made a series of \kde charts with the Python library \textit{seaborn} \cite{seaborn}. 
+To determine the quality of the data, we made a series of \kde charts with the Python library \textit{seaborn} \cite{seaborn}. Since histograms are vulnerable to binning effects and cumulative distribution charts tend to be less intuitive to read, distributions in this report are presented as \acrfull{kde} charts. Briefly, these work by drawing a Gaussian distribution around each point of data, summing all distributions together, and normalizing so the area under the curve is equal to 1. The $y$ axis, then, does not represent a real value, instead only a probability density. \KDE charts contrast \cdf charts which can be used to more easily extract median, percentiles, etc.; however, the point of the charts here is more to show clustering than anything, which \kde charts excel at intuitively presenting.
 
 % \begin{wrapfigure}[16]{L}{0.65\textwidth}
 \begin{figure}[t]
@@ -37,7 +37,7 @@ The most immediately useful distribution is that of the \rtt between \ip pairs, 
 \end{figure}
 % \end{wrapfigure}
 
-To further assess data quality we turned to measures of the data spread for each data point. \Cref{fig:caida_measurements_distribution} shows the distribution of measurement counts between each \ip address pair, showing that although most pairs had on the order of 1-20 measurements, a sizeable fraction had more than that, and there were even some in the 500+ measurements range. This is likely a result of the way \ripe Atlas and \caida nodes are networked. A node's local gateway would always show up on a traceroute (unless configured to not respond to pings), as would common paths through a node's \isp, so these \ip addresses are measured extremely frequently.
+To further assess data quality we turned to measures of the data spread for each data point. \Cref{fig:caida_measurements_distribution} shows the distribution of measurement counts between each \ip address pair, showing that although most pairs had on the order of 1-20 measurements, a sizeable fraction had more than that, and there were even some in the 500+ measurements range. This effect is likely a result of the way \ripe Atlas and \caida nodes are networked. A node's local gateway would always show up on a traceroute (unless configured to not respond to pings), as would common paths through a node's \isp, so these \ip addresses are measured extremely frequently.
 
 % \begin{wrapfigure}{R}{0.4\textwidth}
 \begin{figure}[htb]
@@ -59,7 +59,7 @@ To further assess data quality we turned to measures of the data spread for each
 
 The first measure of data quality used is standard deviation. \Cref{fig:caida_stdev_distribution} shows the distribution of standard deviations across all measured \ip address pairs (for charting purposes, pairs with only one measurement were interpreted as 0 standard deviation). The chart shows an incredibly smooth curve where the overwhelming majority of pairs have standard deviations well below 20 ms.
 
-Since standard deviations are all relative, we next calculated a \cv for each \ip address pair as a measurement of data quality. \Cref{fig:caida_cv_distribution} shows the distribution of \cvs for all \ip address pairs, with the majority of \cvs below 0.1 -- in other words, very good data with low spread for each pair.
+Since standard deviations are all relative, we next calculated a \cv for each \ip address pair as a measurement of data quality. \Cref{fig:caida_cv_distribution} shows the distribution of \cvs for all \ip address pairs, with the majority of \cvs below 0.1 -- in other words, excellent-quality data with low spread for each pair.
 
 \begin{figure}[htb]
     \centering
@@ -113,11 +113,11 @@ The simplest way of mapping a set of points on a coordinate plane with values at
     \label{fig:caida_scatterplot}
 \end{figure}
 
-Some simple relationships can be inferred with moderate difficulty, like better internet connections near the coast or possibly major cities, but otherwise this map is only good at confirming that geolocation of IP addresses works. Many areas simply don't have measurements either, and those that appear covered look that way because the dots for each measurement were inflated for visual effect. If they were more accurately represented to-scale as single pixels, the map would be very sparse.
+Some simple relationships can be inferred with moderate difficulty, like better internet connections near the coast or possibly major cities, but otherwise this map is only good at confirming that geolocation of IP addresses works. Many areas simply do not have measurements either, and those that appear covered look that way because the dots for each measurement were inflated for visual effect. If they were more accurately represented to-scale as single pixels, the map would be very sparse.
 
-To solve this problem the map needs some interpolation to fill in the gaps and make the data easier to understand. Ideally someone looking at the map should be able to point to a spot on the map and get an estimate for connectivity at that location, even if there wasn't a measurement at precisely that location. However, even after z-score filtering, aggregation by source-destination pairs, and more filtering, there were still millions of data points within the \us alone. To that end we tried some unusual techniques for further aggregating the data together, in ways that were more manageable for visualization tools. It was also decided that we should not lose resolution as the density of points increased. For example, something like drawing a grid of static boxes on top of the map and grouping using those wouldn't do because there may be a city with thousands of points in one, and a rural area with only a few points in another, but they'd both take up the same area on the map.
+To solve this problem the map needs some interpolation to fill in the gaps and make the data easier to understand. Ideally someone looking at the map should be able to point to a spot on the map and get an estimate for connectivity at that location, even if there was not a measurement at precisely that location. However, even after z-score filtering, aggregation by source-destination pairs, and more filtering, there were still millions of data points within the \us alone. To that end we tried some unusual techniques for further aggregating the data together, in ways that were more manageable for visualization tools. It was also decided that we should not lose resolution as the density of points increased. For example, something like drawing a grid of static boxes on top of the map and grouping using those would not do because there may be a city with thousands of points in one, and a rural area with only a few points in another, but they'd both take up the same area on the map.
 
-\subsubsection{Quadtree grouping} One of the first techniques tried for grouping data together was something we dubbed "quadtree grouping". The technique is adapted from methods used to optimize collision detection in 2D games where the screen is cut into four boxes based on the number of entities in each quadrant, then each box is cut into four more with the same metric, and so on until some threshold with an optimal number of entities per box is reached. This was performed on the data set here and adjusted for different parameters like maximum tree depth, maximum nodes per box, etc.
+\subsubsection{Quadtree grouping} One of the first techniques tried for grouping data together was something we dubbed "quadtree grouping". The technique is adapted from methods used to optimize collision detection in 2D games where the screen is cut into four boxes based on the number of entities in each quadrant, then each box is cut into four more with the same metric, and so on until some threshold with an optimal number of entities per box is reached. This process was performed on the data set here and adjusted for different parameters like maximum tree depth, maximum nodes per box, etc.
 
 \begin{figure}[htb]
     \centering

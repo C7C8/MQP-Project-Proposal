@@ -73,7 +73,7 @@ To examine whether or not it was statistically allowable to aggregate the data b
 \subsection{Results}
 
 \subsubsection{CDNs}
-When searching for the small image files we discovered that the vast majority of websites use a \cdn for serving their content, including both JavaScript as well as static content. As such, our ping results are a reflection of a user's connection to each \cdn. To determine if there was a strong correlation between user location and speed to a given \cdn we attempted to determine the \cdn each site was using through \icmp pings and reverse \dns lookups, then mapped the pings for a given \cdn (including pings to all the sites that use that \cdn). We found that the \rtt to a given \cdn tended to be very similar across a given area.
+When searching for the small image files we discovered that the vast majority of websites use a \cdn for serving their content, including both JavaScript as well as static content. As such, our ping results are a reflection of a user's connection to each \cdn. To determine if there was a strong correlation between user location and speed to a given \cdn we attempted to determine the \cdn each site was using through \icmp pings and reverse \dns lookups, then mapped the pings for a given \cdn (including pings to all the sites that use that \cdn). We found that the \rtt to a given \cdn tended to be similar across a given area.
 
 \begin{figure}[htb]
     \centering
@@ -83,7 +83,7 @@ When searching for the small image files we discovered that the vast majority of
 \end{figure}
 
 \subsubsection{Final Heat Map}
-The final heat map produced from the site ping data shows some pretty clear trends. The coastal and central states have significantly lower ping times than the south-eastern states and north-western states. In states with high ping times there are pockets of low ping times around major cities, such as in  Tampa, Jacksonville, Orlando, and Miami, Florida; Knoxville and Memphis, Tennessee; and Colorado Springs, Colorado. There are some areas with surprising, and somewhat dubious results. For example, New York City, New York; Seattle, Washington; and Los Angeles, California all appear to be in pockets of poor \rtt surrounded by good \rtt.
+The final heat map produced from the site ping data shows clear trends. The coastal and central states have significantly lower ping times than the south-eastern states and north-western states. In states with high ping times there are pockets of low ping times around major cities, such as in  Tampa, Jacksonville, Orlando, and Miami, Florida; Knoxville and Memphis, Tennessee; and Colorado Springs, Colorado. There are some areas with surprising, and somewhat dubious results. For example, New York City, New York; Seattle, Washington; and Los Angeles, California all appear to be in pockets of poor \rtt surrounded by good \rtt.
 
 % \todo{Evan: do}   
 % The heat map shows many states that are heavily divided by \rtt. This suggests that a more appropriate way of ranking states is with the percentage of each state that has a "good" \rtt.
