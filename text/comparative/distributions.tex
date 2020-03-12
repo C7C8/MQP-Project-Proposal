@@ -6,7 +6,7 @@ Because the different methods use different metrics --- speed-of-light efficienc
 
 As there are 51 charts total only a few are listed here, intended to provide the best evidence for the different observations about the distributions:
 
-\paragraph{Site ping is the most extreme} Across all \kde charts for all graphs, data from traceroutes and \dns cache manipulation tend to agree with each other (although spread differs). However, site ping consistently reports values very near the best possible value on these normalized axes, as demonstrated in \cref{fig:comparative_tn_dist}. The peak for traceroute data (referred to as just \caida on the charts) is sharper than \dns but very close to its median value. In comparison, the peak for site ping is incredibly sharp and narrow, and focused over the 0.95-1.0 range.
+\paragraph{Site ping is the most extreme} Across all \kde charts for all graphs, data from traceroutes and \dns cache manipulation tend to agree with each other (although spread differs). However, site ping consistently reports values near the best possible value on these normalized axes, as demonstrated in \cref{fig:comparative_tn_dist}. The peak for traceroute data (referred to as just \caida on the charts) is sharper than \dns but close to its median value. In comparison, the peak for site ping is incredibly sharp and narrow, and focused over the 0.95-1.0 range.
 
 % \begin{figure}[h]
 \begin{wrapfigure}[16]{R}{0.55\textwidth}
@@ -17,7 +17,7 @@ As there are 51 charts total only a few are listed here, intended to provide the
 \end{wrapfigure}
 % \end{figure}
 
-This should not be taken as an indicator that site ping reports consistently good quality, but that there are less common instances where it reports \textit{exceptionally} poor. The fact that its distribution is centered over very high values is an artifact of normalizing by maximum value (and inverting) -- it means that somewhere to the far left, there's a small group of data points with very poor connectivities, just not enough to be seen on the \kde charts. Keep in mind, this is \textit{after} z-score filtering to eliminate outliers.
+This should not be taken as an indicator that site ping reports consistently good quality, but that there are less common instances where it reports \textit{exceptionally} poor. The fact that its distribution is centered over high values is an artifact of normalizing by maximum value (and inverting) -- it means that somewhere to the far left, there's a small group of data points with poor connectivities, just not enough to be seen on the \kde charts. Keep in mind, this is \textit{after} z-score filtering to eliminate outliers.
 
 Put more concisely: the worst connectivity reported by site ping are dramatically worse than the worst of either \dns or \caida data, even though on average it reports good connectivity.
 

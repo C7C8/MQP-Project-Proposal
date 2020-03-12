@@ -14,7 +14,7 @@ A possible solution is to normalize \rtts by distance, calculated by dividing \r
 
 %That quality is a better indicator of internet connectivity than raw \rtts are because \rtts will be heavily affected by connections to far away geographic regions. For instance, a ping to a Chinese website will show an \rtt on the order of hundreds of milliseconds. Considering how far away China is and the amount of infrastructure between the \us and China, that's only to be expected. Averages at a location in the \us would be heavily swayed by those large values, meaning raw \rtt would misrepresent the data. The same applies to a user on the west coast trying to connect to a server on the east coast vs. the west. In reality the user's connectivity could be just fine, but by using a simple average or median of the two attempts, the data will be skewed somewhere in the middle.
 % 
-% To correct for this we can divide \rtt by the distance between source and destination to obtain a measurement of milliseconds per kilometer. Naturally this number will be very small, but it will be a good indicator of infrastructure in a region.
+% To correct for this we can divide \rtt by the distance between source and destination to obtain a measurement of milliseconds per kilometer. Naturally this number will be small, but it will be a good indicator of infrastructure in a region.
 
 \section{RTT to Regional Locations}\label{sec:definition_rtt_regional}
 
@@ -61,7 +61,7 @@ The average advertised connection speed offered by broadband providers in the \u
 % \subsection{Normalized by regional affluence}
 
 %\paragraph{Average}
-%The average cost per \mbps in an area can be used as a general metric for the internet connection quality in that area. An average should be taken across connections with "comparable" speeds and prices. For example, an average could include connections between 100 and 1000 \mbps and costs between \$50 and \$200/mo, and leave out outliers such as very expensive or inexpensive connections (relative to the area), or connections much faster or slower than most other connections (e.g. a 2 \mbps \dsl connection in an area where fiber is available). Multiple averages could be taken for a given area. For example, average cost of connections between 10 and 100 \mbps and betwen 100 and 1000. This would allow comparison of "fast" and "slow" connection speeds in two different areas.
+%The average cost per \mbps in an area can be used as a general metric for the internet connection quality in that area. An average should be taken across connections with "comparable" speeds and prices. For example, an average could include connections between 100 and 1000 \mbps and costs between \$50 and \$200/mo, and leave out outliers such as expensive or inexpensive connections (relative to the area), or connections much faster or slower than most other connections (e.g. a 2 \mbps \dsl connection in an area where fiber is available). Multiple averages could be taken for a given area. For example, average cost of connections between 10 and 100 \mbps and betwen 100 and 1000. This would allow comparison of "fast" and "slow" connection speeds in two different areas.
 
 % \subsection{Maximum}
 % The maximum cost per \mbps in an area shows 

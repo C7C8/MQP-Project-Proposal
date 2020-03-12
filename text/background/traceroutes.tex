@@ -11,7 +11,7 @@ Traceroutes hinge on the \ttl field of \ip packets, an eight-bit field that is d
     \label{fig:traceroute_diagram}
 \end{figure}
 
-The mechanics of a traceroute program are then a very simple procedure. With $i=1$ to start, an \icmp-based traceroute program follows the below:
+The mechanics of a traceroute program are then a simple procedure. With $i=1$ to start, an \icmp-based traceroute program follows the below:
 
 \begin{enumerate}
     \item Send an \icmp ping with \TTL$=i$ to the destination server.
